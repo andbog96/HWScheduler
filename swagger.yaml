@@ -1,0 +1,264 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: User and Channel Management API
+  description: API for user, channel, and event management
+
+schemes:
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+  
+# tags:
+#   - name: user
+#     description: Operations about user
+#   - name: item
+#     description: Tags, LitTypes, Authors and other data
+#   - name: term
+#     description: Operations about terms
+#   - name: literature
+#     description: Searching and Createing Literature
+
+paths:
+  /user:
+    post:
+      summary: Register a new user
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              login:
+                type: string
+              password:
+                type: string
+      responses:
+        '200':
+          description: User registered successfully
+          schema:
+            type: object
+            properties:
+              token:
+                type: string
+        '400':
+          description: Bad request
+        '404':
+          description: User not found
+    
+  /user/info:  
+    get:
+      summary: Returns information related to user
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              token:
+                type: string
+      responses:
+        '200':
+          description: Information related to user
+          schema:
+            type: object
+            properties:
+              channels:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    channel_id:
+                      type: integer
+                    name:
+                      type: string
+                    is_admin:
+                      type: boolean
+              events:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    event_id:
+                      type: integer
+                    name:
+                      type: string
+                    description:
+                      type: string
+                    deadline:
+                      type: integer
+                    estimated:
+                      type: number
+                    
+
+  /channel:
+    post:
+      summary: Create a new channel
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              token:
+                type: string
+      responses:
+        '200':
+          description: Channel created successfully
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              channel_id:
+                type: integer
+        '400':
+          description: Bad request
+        '403':
+          description: Channel with such name is already exists
+        '401':
+          description: unauthorized
+      
+  /user/channel:
+    post:
+      summary: Subscribe to a channel
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              token:
+                type: string
+              shortname:
+                type: string
+      responses:
+        '200':
+          description: Subscribed to the channel. Get /user/info
+        '404':
+          description: No channel
+
+  /user/channel/{ch_id}:
+    delete:
+      summary: Unsubscribe from a channel
+      parameters:
+        - name: ch_id
+          in: path
+          required: true
+          type: integer
+        - name: token
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              token:
+                type: string
+            
+      responses:
+        '200':
+          description: Unsubscribed from the channel successfully
+
+  /channel/{ch_id}/event:
+    post:
+      summary: Create an event within a channel
+      parameters:
+        - name: ch_id
+          in: path
+          required: true
+          type: integer
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              description:
+                type: string
+              deadline:
+                type: string
+                format: date
+              token:
+                type: string
+              channel_id:
+                type: integer
+      responses:
+        '200':
+          description: Event created successfully
+  
+  /event/{ev_id}:
+    put:
+      summary: Update an existing event
+      parameters:
+        - name: ev_id
+          in: path
+          required: true
+          type: integer
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              description:
+                type: string
+              deadline:
+                type: string
+              token:
+                type: string
+      responses:
+        '200':
+          description: Event successfully updated
+
+    delete:
+      summary: Delete an existing event
+      parameters:
+        - name: ev_id
+          in: path
+          required: true
+          type: integer
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              token:
+                type: string
+      responses:
+        '200':
+          description: Event deleted
+          
+  /user/event/{event_id}:
+    post:
+      summary: Mark an event as done by the user after a specified worktime
+      parameters:
+        - name: event_id
+          in: path
+          required: true
+          type: integer
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              work_time:
+                type: integer
+              token:
+                type: string
+      responses:
+        '200':
+          description: Event successfully completed
