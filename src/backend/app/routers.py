@@ -1,18 +1,28 @@
 # app/routes.py
 from flask import Blueprint, jsonify, make_response, request, Flask
-from app.db import create_user
+from app.db import *
 from .utils import generate_token, verify_token
 
 main_blueprint = Blueprint('main', __name__)
 
 # User Management
 @main_blueprint.route('/user', methods=['POST'])
-def create_user_route():
+def createUserRoute():
     try:
         data = request.get_json()
         login = data['login']
         password = data['password']
-        user_id = create_user(login, password)
+        user_data = getUserByLogin(login)
+
+        if user_data is None : 
+            user_id = createUser(login, password)
+        
+        else:
+            user_id = user_data[0]
+            passwordActual = user_data[1]
+            if password != passwordActual:
+                raise Exception("error password")
+
         token = generate_token(user_id)
         response_data = {'token': token}
         status_code = 200
@@ -22,3 +32,62 @@ def create_user_route():
         status_code = 400
         message = 'Bad request'
     return make_response(jsonify(response_data), status_code, {'message': message})
+
+# Channel Management
+@main_blueprint.route('/channel', methods=['POST'])
+def createChannelRoute():
+    try:
+        data = request.get_json()
+        name = data['name']
+        token = data['token'] 
+
+        if not token:
+            return jsonify({'message': 'Token is missing'}), 401
+
+        userId = verify_token(token)
+        if userId == 'Token is expired' or userId == 'Invalid token':
+            return jsonify({'message': 'Invalid token'}), 401
+
+        channel = getChannelIdByName(name)
+
+        if channel is not None:
+            raise Exception("channel Exists")
+
+        channelId = createChannel(name, userId)
+
+        channel = getChannelIdByName(name)
+        response_data = {'name': name, 'channel_id' : channelId}
+        status_code = 200
+        message = "Channel created successfully"
+
+    except Exception as e:
+        response_data = {'error': str(e)}
+        status_code = 400
+        message = 'Bad request'
+
+    return make_response(jsonify(response_data), status_code, {'message': message})
+
+@main_blueprint.route('/user/channel', methods=['POST'])
+def subcribeChannel():
+
+    data = request.get_json()
+    token = data['token']
+    shortname = data['shortname']
+
+    userId = verify_token(token)
+    if userId == 'Token is expired' or userId == 'Invalid token':
+        return jsonify({'message': 'Invalid token'}), 404
+    
+    channel = getChannelIdByName(shortname)
+
+    if channel is None:
+        return jsonify({'message': 'Invalid channel id'}), 404
+    
+    channelId = channel[0]
+
+    if existsSubcribe(userId, channelId):
+        return jsonify({'message': 'subscribe exists'}), 404
+
+    createSubcribe(userId, channelId)
+    return jsonify({'message': 'Subscribed to the channel. Get /user/info'}), 200
+    

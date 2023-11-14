@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS users, channels, events, subscriptions, donejobs;
+
 -- Users table
 CREATE TABLE Users (
     userId SERIAL PRIMARY KEY,
@@ -8,8 +10,7 @@ CREATE TABLE Users (
 -- Channels table
 CREATE TABLE Channels (
     channelId SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    description TEXT,
+    name VARCHAR(100) UNIQUE NOT NULL,
     createdBy INT REFERENCES Users(userId) ON DELETE CASCADE
 );
 
@@ -17,7 +18,7 @@ CREATE TABLE Channels (
 CREATE TABLE Events (
     eventId SERIAL PRIMARY KEY,
     channelId INT REFERENCES Channels(channelId) ON DELETE CASCADE,
-    name VARCHAR(100) NOT NULL,
+    name VARCHAR(100) UNIQUE NOT NULL,
     description TEXT,
     deadline TIMESTAMP,
     userCompletedTask INT DEFAULT 0,
