@@ -35,6 +35,6 @@ CREATE TABLE Subscriptions (
 -- DoneJobs table
 CREATE TABLE DoneJobs ( 
     userId INT REFERENCES Users(userId) ON DELETE CASCADE,
-    eventId INT REFERENCES Events(event_id) ON DELETE CASCADE,
+    eventId INT REFERENCES Events(eventId) ON DELETE CASCADE,
     time INT
 );
