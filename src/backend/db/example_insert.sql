@@ -5,10 +5,10 @@ INSERT INTO Users (login, password) VALUES
     ('user3', 'password3');
 
 -- Channels
-INSERT INTO Channels (name, description, createdBy) VALUES 
-    ('Channel 1', 'Description 1', 1),
-    ('Channel 2', 'Description 2', 2),
-    ('Channel 3', 'Description 3', 3);
+INSERT INTO Channels (name, createdBy) VALUES 
+    ('Channel 1', 1),
+    ('Channel 2', 2),
+    ('Channel 3', 3);
 
 -- Events
 INSERT INTO Events (channelId, name, description, deadline, userCompletedTask, sumTime) VALUES 

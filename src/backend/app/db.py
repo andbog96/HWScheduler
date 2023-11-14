@@ -1,18 +1,33 @@
 # app/db.py
-import psycopg2
-
-conn = psycopg2.connect(
-    dbname="postgres",
-    user="postgres",
-    password="1234",
-    host="localhost"
-)
+from .settings import conn
 
 cur = conn.cursor()
 
+def getUserByLogin(login):
+    cur.execute("SELECT userId, password FROM Users WHERE login = %s", (login,))
+    return cur.fetchone()
 
-def create_user(login, password):
+def createUser(login: str, password:str) -> int:
     cur.execute("INSERT INTO Users (login, password) VALUES (%s, %s) RETURNING userId", (login, password))
-    user_id = cur.fetchone()[0]
+    userId = cur.fetchone()[0]
     conn.commit()
-    return user_id
+    return userId
+
+def getChannelIdByName(name:str):
+    cur.execute("SELECT channelId FROM Channels WHERE name = %s", (name,))
+    return cur.fetchone()
+
+def createChannel(name :str, createdBy: str) -> int:
+    cur.execute("INSERT INTO Channels (name, createdBy) VALUES (%s, %s) RETURNING channelId",(name, createdBy))
+    channelId = cur.fetchone()[0]
+    conn.commit()
+    return channelId
+
+def existsSubcribe(userId: int, channelId :int):
+    cur.execute("SELECT * FROM Subscriptions  WHERE userId = %s and channelId = %s",(userId, channelId))
+    return cur.fetchone() is not None
+
+def createSubcribe(userId: int, channelId :int):
+    cur.execute("INSERT INTO Subscriptions (userId, channelId) VALUES (%s, %s)",(userId, channelId))
+    conn.commit()
+    
