@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.example.hwscheduler.ui.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/group_event_swipe_layout"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/group_event_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="@string/task_name"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+        </TextView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        app:bring_to_clamp="100dp"
+        android:orientation="horizontal"
+        app:clamp="self"
+        app:gravity="right"
+        app:sticky="none">
+
+        <ImageView
+            android:id="@+id/event_edit_img"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="6dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_delete" />
+
+        <ImageView
+            android:id="@+id/event_remove_img"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="6dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_edit" />
+
+    </LinearLayout>
+
+</com.example.hwscheduler.ui.SwipeLayout>
