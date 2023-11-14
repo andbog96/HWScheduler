@@ -104,3 +104,19 @@ def getAllDataByUser(userId: int):
     
     return (resChannelsData, eventsData)
     
+    
+def update_event(event_id, name, description, deadline):
+    cur.execute(
+        """
+        UPDATE Events
+        SET name = %s, description = %s, deadline = %s
+        WHERE eventId = %s
+        """,
+        (name, description, deadline, event_id)
+    )
+    conn.commit()
+
+
+def check_event_exists(event_id):
+    cur.execute("select count(*) from Events where eventId = %s", (event_id,))
+    return cur.fetchone()[0] == 1
