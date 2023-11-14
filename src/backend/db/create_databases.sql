@@ -9,7 +9,6 @@ CREATE TABLE Users (
 CREATE TABLE Channels (
     channelId SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    shortName VARCHAR(100) NOT NULL,
     description TEXT,
     createdBy INT REFERENCES Users(userId) ON DELETE CASCADE
 );
