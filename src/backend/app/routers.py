@@ -90,4 +90,21 @@ def subcribeChannel():
 
     createSubcribe(userId, channelId)
     return jsonify({'message': 'Subscribed to the channel. Get /user/info'}), 200
+
+
+@main_blueprint.route('/channel/<int:channel_id>/event', methods=['POST'])
+def create_event(channel_id):
+    if not check_channel_exists(channel_id):
+        return jsonify({'message': 'Channel does not exist'}), 404
+    data = request.get_json()
+    token = data['token']
+    if not token:
+        return jsonify({'message': 'Token is missing'}), 401
+    user_id = verify_token(token)
+    if user_id == 'Token is expired' or user_id == 'Invalid token':
+        return jsonify({'message': 'Invalid token'}), 401
+    if not check_user_rights(channel_id, user_id):
+        return jsonify({'message': 'User has not access rights to create event'}), 403
+    add_event(channel_id, data['name'], data['description'], data['deadline'])
+    return jsonify({'message': 'Event was created successfully'})
     
