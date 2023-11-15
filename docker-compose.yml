@@ -1,0 +1,16 @@
+version: "3" 
+ 
+services: 
+  data-base: 
+    image: postgres 
+    restart: unless-stopped 
+    environment: 
+      - POSTGRES_USER=postgres 
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=postgres 
+      - POSTGRES_MAX_CONNECTIONS=2000 
+    ports: 
+      - "7777:5432" 
+    volumes: 
+      - ./src/backend/db/create_databases.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./src/backend/db/example_insert.sql:/docker-entrypoint-initdb.d/02_insert_values.sql
