@@ -8,6 +8,6 @@ conn = psycopg2.connect(
     host="localhost"
 )
 
-SECRET_KEY = ''.join(random.choice(string.ascii_lowercase) for i in range(100))
+SECRET_KEY = "sdghkghgkjshdfkjghsdkghsdlkghdkghsdkghdjkghsdlghsdghjdlkghdfh"
 
 alg = 'HS256'

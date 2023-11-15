@@ -42,11 +42,11 @@ def createChannelRoute():
         token = data['token'] 
 
         if not token:
-            return jsonify({'message': 'Token is missing'}), 401
+            return jsonify({'message': 'Token is missing'}), 404
 
         userId = verify_token(token)
         if userId == 'Token is expired' or userId == 'Invalid token':
-            return jsonify({'message': 'Invalid token'}), 401
+            return jsonify({'message': 'Invalid token'}), 404
 
         channel = getChannelIdByName(name)
 
@@ -108,3 +108,35 @@ def create_event(channel_id):
     add_event(channel_id, data['name'], data['description'], data['deadline'])
     return jsonify({'message': 'Event was created successfully'})
     
+@main_blueprint.route('/user/channel/<int:ch_id>', methods=['DELETE'])
+def deleteChannelRouter(ch_id):
+    data = request.get_json()
+    token = data['token']
+
+    userId = verify_token(token)
+    if userId == 'Token is expired' or userId == 'Invalid token':
+        return jsonify({'message': 'Invalid token'}), 404
+
+    if not channelExistsById(ch_id):
+        return jsonify({'message': 'Invalid channel id'}), 404
+    
+    deleteSubcribe(userId, ch_id)
+    return jsonify({'message': 'Unsubscribed from the channel successfully'}), 200
+
+@main_blueprint.route('/user/info', methods=['GET'])
+def userInfoRouter():
+    data = request.get_json()
+    token = data['token']
+
+    userId = verify_token(token)
+    if userId == 'Token is expired' or userId == 'Invalid token':
+        return jsonify({'message': 'Invalid token'}), 404
+
+    (channelsData,eventsData) =  getAllDataByUser(userId)
+
+    result = {
+        "channels": channelsData,
+        "events": eventsData
+    }
+    
+    return make_response(jsonify(result), 200, {'message': "Returns information related to user"})
