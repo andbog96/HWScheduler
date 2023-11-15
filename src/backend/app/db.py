@@ -123,10 +123,12 @@ def getAllDataByUser(userId: int):
             Events.sumTime AS sumTime
         FROM
             Events
+        INNER join Subscriptions
+        on Subscriptions.channelId = Events.channelId
         WHERE
-            Events.eventId = {userId} AND Events.deadline > '{current_time}'
+            Subscriptions.userId = {userId} AND Events.deadline > '{current_time}'
         ORDER BY
-            Events.deadline DESC;
+            Events.deadline;
     """)
     eventsData = cur.fetchall()
 
