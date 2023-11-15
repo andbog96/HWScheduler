@@ -1,11 +1,11 @@
 <template>
   <common-form>
     <user-profile :login="userData.login" :go-to-events="false"/>
-    <div v-if="this.$data.to_submit">
-      <event-item :event="this.$data.event"/>
-      <label-input :model-value="this.$data.time" placeholder="Затраченное время: ">Время: </label-input>
-      <my-button :classes="'add'" @click="send">Да</my-button>
-      <my-button :classes="'remove'" @click="revert">Нет</my-button>
+    <div v-if="to_submit">
+      <event-item :event="event"/>
+      <label-input v-model="time" placeholder="Затраченное время: " label="Время:"/>
+      <my-button :classes="'add'" @click="send">Отправить</my-button>
+      <my-button :classes="'remove'" @click="revert">Отмена</my-button>
     </div>
     <common-list v-if="this.$data.info" :not-empty="this.$data.info.events.length > 0">
       <list-item v-for="(cur, index) in this.$data.info.events" :key="index">
@@ -57,10 +57,9 @@
         await router.push("/");
 
       const res = await this.us.userInfo() as UserInfo
-      if (res) {
-        this.$data.info = res
-        await this.saveData({data: res})
-      }
+      console.log(res)
+      this.$data.info = res
+      await this.saveData({data: res})
     },
     methods: {
       async complete(event: EventData) {
@@ -68,10 +67,13 @@
         this.$data.event = event
       },
       async send() {
+        console.log(this.$data.time)
         const res = parseInt(this.$data.time)
-        if (this.$data.event) {
-          await this.us.completed(this.$data.event, isNaN(res) ? null : res)
-          await this.remove_event(this.$data.event)
+        console.log(res)
+        if (this.$data.event && !isNaN(res)) {
+          await this.us.event_completed(this.$data.event, res)
+          await this.remove_event(this.$data.event);
+          this.$data.info = store.state.auth.data;
         }
         this.revert()
       },

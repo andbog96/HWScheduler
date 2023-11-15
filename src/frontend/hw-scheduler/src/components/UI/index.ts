@@ -1,7 +1,6 @@
 import MyButton from "@/components/UI/primitives/MyButton.vue";
 import LabelInput from "@/components/UI/composits/LabelInput.vue";
 import CommonForm from "@/components/UI/primitives/CommonForm.vue";
-import LabelList from "@/components/UI/composits/LabelList.vue";
 import LabelValue from "@/components/UI/composits/LabelValue.vue";
 import MyLabel from "@/components/UI/primitives/MyLabel.vue";
 import MyValue from "@/components/UI/primitives/MyValue.vue";
@@ -19,7 +18,6 @@ export default [
 
 
     LabelInput,
-    LabelList,
     LabelValue,
 
     CommonForm,

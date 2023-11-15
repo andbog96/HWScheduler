@@ -3,3 +3,7 @@ export interface ErrorResponse {
     timestamp: string,
     status: string
 }
+
+export interface SuccessResponse {
+    message: string
+}

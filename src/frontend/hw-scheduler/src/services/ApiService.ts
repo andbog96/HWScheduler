@@ -9,7 +9,7 @@ export class Api {
         const config: AxiosRequestConfig = {
             url,
             headers: {
-                'Authorization': `Bearer ${store.state.auth.token}`
+                'token': `${store.state.auth.token}`
             }
         };
         this.axiosInstance = axios.create(config);

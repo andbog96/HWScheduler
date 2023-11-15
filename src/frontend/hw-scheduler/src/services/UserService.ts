@@ -1,5 +1,5 @@
 import {AxiosError} from "axios";
-import {ErrorResponse} from "@/services/ErrorResponse";
+import {ErrorResponse, SuccessResponse} from "@/services/ErrorResponse";
 import {Api} from "@/services/ApiService";
 
 export interface TokenUserData {
@@ -9,6 +9,10 @@ export interface TokenUserData {
 export interface LoginForm {
   login: string,
   password: string
+}
+
+export interface SubmitSolutionForm {
+  work_time: number | null
 }
 
 export interface EventData {
@@ -34,9 +38,8 @@ export interface UserInfo {
 export class UserService {
   public async signInUp(form: LoginForm): Promise<ErrorResponse | TokenUserData> {
     try {
-      return {token: 'Abba'};
-      // const api = new Api();
-      // return await api.post<TokenUserData, LoginForm>('/users', form);
+      const api = new Api();
+      return await api.post<TokenUserData, LoginForm>('/user', form);
     } catch (e) {
       const error = e as AxiosError;
       if (error.response != null)
@@ -47,23 +50,8 @@ export class UserService {
 
   public async userInfo(): Promise<ErrorResponse | UserInfo> {
     try {
-      return {
-        channels: [
-          {channel_id: 0, name: 'db_itmo', is_admin: false},
-          {channel_id: 1, name: 'fp_itmo', is_admin: true},
-          {channel_id: 2, name: 'ml-itmo', is_admin: true},
-          {channel_id: 3, name: 'cpp-itmo', is_admin: false}
-        ],
-        events: [
-          {event_id: 0, channel_id: 0, name: "LR1", description: "Do or Die", deadline: new Date(), estimated: null},
-          {event_id: 1, channel_id: 1, name: "LR1", description: "Church", deadline: new Date(), estimated: null},
-          {event_id: 2, channel_id: 1, name: "LR2", description: "Foldl", deadline: new Date(), estimated: null},
-          {event_id: 3, channel_id: 2, name: "LR1", description: "K-nearest", deadline: new Date(), estimated: 150},
-          {event_id: 4, channel_id: 2, name: "LR2", description: "Perceptron", deadline: new Date(), estimated: 100},
-          {event_id: 5, channel_id: 3, name: "LR1", description: "cls-07", deadline: new Date(), estimated: null},
-          {event_id: 6, channel_id: 3, name: "LR2", description: "bignum", deadline: new Date(), estimated: 250}
-        ]
-      }
+      const api = new Api();
+      return await api.get<UserInfo>('/user/info');
     } catch (e) {
       const error = e as AxiosError;
       if (error.response != null)
@@ -72,7 +60,45 @@ export class UserService {
     }
   }
 
-  public async completed(event: EventData, time: number | null): Promise<ErrorResponse | null> {
+  public async event_completed(event: EventData, time: number): Promise<ErrorResponse | SuccessResponse> {
+    try {
+      const api = new Api();
+      return await api.post<SuccessResponse, SubmitSolutionForm>('/user/event/' + event.event_id, {work_time: time});
+    } catch (e) {
+      const error = e as AxiosError;
+      if (error.response != null)
+        return error.response.data as ErrorResponse;
+      throw e;
+    }
+  }
+
+  public async channel_unsubscribe(channel: ChannelData): Promise<ErrorResponse | null> {
+    try {
+      // const api = new Api();
+      // return await api.post<TokenUserData, LoginForm>('/users', form);
+      return null;
+    } catch (e) {
+      const error = e as AxiosError;
+      if (error.response != null)
+        return error.response.data as ErrorResponse;
+      throw e;
+    }
+  }
+
+  public async channel_subscribe(name: string): Promise<ErrorResponse | null> {
+    try {
+      // const api = new Api();
+      // return await api.post<TokenUserData, LoginForm>('/users', form);
+      return null;
+    } catch (e) {
+      const error = e as AxiosError;
+      if (error.response != null)
+        return error.response.data as ErrorResponse;
+      throw e;
+    }
+  }
+
+  public async channel_delete(channel_id: number): Promise<ErrorResponse | null> {
     try {
       // const api = new Api();
       // return await api.post<TokenUserData, LoginForm>('/users', form);
