@@ -1,15 +1,7 @@
 # app/db.py
+from .settings import conn, cur
+import datetime
 
-import psycopg2
-
-conn = psycopg2.connect(
-    dbname="postgres",
-    user="postgres",
-    password="1234",
-    host="localhost"
-)
-
-cur = conn.cursor()
 
 def create_user(login, password):
     cur.execute("INSERT INTO Users (login, password) VALUES (%s, %s) RETURNING userId", (login, password))
@@ -29,11 +21,6 @@ def check_user_rights(channel_id, user_id):
 def check_event_exists(event_id):
     cur.execute("select count(*) from Events where eventId = %s", (event_id,))
     return cur.fetchone()[0] == 1
-
-from .settings import conn
-import datetime
-
-cur = conn.cursor()
 
 def getUserByLogin(login):
     cur.execute("SELECT userId, password FROM Users WHERE login = %s", (login,))

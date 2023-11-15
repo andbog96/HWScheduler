@@ -8,6 +8,8 @@ conn = psycopg2.connect(
     host="localhost"
 )
 
+cur = conn.cursor()
+
 SECRET_KEY = "sdghkghgkjshdfkjghsdkghsdlkghdkghsdkghdjkghsdlghsdghjdlkghdfh"
 
 alg = 'HS256'
