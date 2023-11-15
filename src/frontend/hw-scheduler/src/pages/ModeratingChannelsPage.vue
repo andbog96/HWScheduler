@@ -5,6 +5,12 @@
     <common-list :not-empty="events.length > 0">
       <list-item v-for="(cur, index) in events" :key="index">
         <event-item :event="cur" :channel="channel.name"/>
+        <my-button :classes="'remove'">Удалить</my-button>
+      </list-item>
+      <list-item>
+        <my-input placeholder="Название"></my-input>
+        <my-area placeholder="Описание"></my-area>
+        <my-button :classes="'add'">Добавить</my-button>
       </list-item>
     </common-list>
   </common-form>
@@ -20,10 +26,13 @@
   import EventItem from "@/components/UI/list/results/eventItem.vue";
   import CommonList from "@/components/UI/list/CommonList.vue";
   import ListItem from "@/components/UI/list/ListItem.vue";
+  import MyInput from "@/components/UI/primitives/MyInput.vue";
+  import MyArea from "@/components/UI/composits/MyArea.vue";
+  import MyButton from "@/components/UI/primitives/MyButton.vue";
 
   export default defineComponent({
     name: "SignUpPage",
-    components: {MyLabel, UserProfile, EventItem, CommonList, ListItem},
+    components: {MyButton, MyArea, MyInput, MyLabel, UserProfile, EventItem, CommonList, ListItem},
     async created() {
       if (!store.state.auth.isAuth)
         await router.push("/");

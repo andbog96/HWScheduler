@@ -6,8 +6,13 @@
       <my-label>Managing channels:</my-label>
       <common-list :not-empty="managing.length > 0">
         <list-item v-for="(cur, index) in managing" :key="index">
-          <channel-item :channel="cur" @click="() => to_manage(cur)"/>
-          <my-button @click="() => to_manage(cur)" :classes="'remove'">Delete</my-button>
+          <channel-item :channel="cur"/>
+          <my-button @click="() => to_manage(cur)">Модерировать</my-button>
+          <my-button @click="() => to_delete(cur)" :classes="'remove'">Удалить</my-button>
+        </list-item>
+        <list-item>
+          <my-input placeholder="Имя канала: " v-model="this.create_name"></my-input>
+          <my-button :classes="'add'" @click="create_channel">Создать</my-button>
         </list-item>
       </common-list>
 
@@ -15,7 +20,11 @@
       <common-list :not-empty="others.length > 0">
         <list-item v-for="(cur, index) in others" :key="index">
           <channel-item :channel="cur"/>
-          <my-button @click="() => to_manage(cur)" :classes="'remove'">Delete</my-button>
+          <my-button @click="() => to_delete(cur)" :classes="'remove'">Отписаться</my-button>
+        </list-item>
+        <list-item>
+          <my-input placeholder="Имя канала: " v-model="this.subscribe_name"></my-input>
+          <my-button :classes="'add'" @click="subscribe_channel">Вступить</my-button>
         </list-item>
       </common-list>
     </common-form>
@@ -24,7 +33,7 @@
 
 <script lang="ts">
   import {defineComponent} from "vue";
-  import {ChannelData, UserInfo, UserService} from "@/services/UserService";
+  import {ChannelData, EventData, UserInfo, UserService} from "@/services/UserService";
   import errorMixin from "@/components/mixins/errorMixin";
   import store from "@/store";
   import MyLabel from "@/components/UI/primitives/MyLabel.vue";
@@ -33,24 +42,59 @@
   import ListItem from "@/components/UI/list/ListItem.vue";
   import router from "@/router/router";
   import UserProfile from "@/components/UI/composits/UserProfile.vue";
+  import updateDataMixin from "@/components/mixins/updateDataMixin";
+  import MyButton from "@/components/UI/primitives/MyButton.vue";
+  import MyInput from "@/components/UI/primitives/MyInput.vue";
 
   export default defineComponent({
     name: "SignInPage",
-    components: {UserProfile, ChannelItem, MyLabel, CommonList, ListItem},
-    mixins: [errorMixin],
+    components: {MyInput, MyButton, UserProfile, ChannelItem, MyLabel, CommonList, ListItem},
+    mixins: [updateDataMixin],
     async created() {
       if (!store.state.auth.isAuth)
         await router.push("/");
     },
+    data() : {info : UserInfo, create_name: string, subscribe_name: string} {
+      return {
+        info: store.state.auth.data,
+        create_name: "",
+        subscribe_name: ""
+      }
+    },
     computed: {
       us: () => new UserService(),
       userData: () => store.state.auth,
-      managing: () => store.state.auth.data.channels.filter(ch => ch.is_admin),
-      others: () => store.state.auth.data.channels.filter(ch => !ch.is_admin)
+      managing: function() {
+        return this.$data.info.channels.filter(ch => ch.is_admin)
+      },
+      others: function() {
+        return this.$data.info.channels.filter(ch => !ch.is_admin)
+      }
     },
     methods: {
       async to_manage(channel: ChannelData) {
         this.$router.push("/user/channel/" + channel.channel_id + '/event')
+      },
+      async to_delete(channel: ChannelData) {
+        const res = await this.us.channel_delete(channel.channel_id);
+        if (res === null) {
+          await this.remove_channel(channel);
+          this.info = store.state.auth.data;
+        }
+      },
+      async create_channel() {
+        const res = await this.us.channel_create(this.create_name)
+        if ('is_admin' in res) {
+          await this.update_data()
+          this.info = store.state.auth.data
+        }
+      },
+      async subscribe_channel() {
+        const res = await this.us.channel_subscribe(this.subscribe_name)
+        if ('message' in res) {
+          await this.update_data()
+          this.info = store.state.auth.data
+        }
       }
     }
   })

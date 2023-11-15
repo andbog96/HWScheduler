@@ -4,7 +4,7 @@ module.exports = {
     proxy: {
       '/': {
         target: 'http://localhost:5000',
-        ws: true,
+        ws: false,
         changeOrigin: true
       }
     }

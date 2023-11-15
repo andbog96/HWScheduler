@@ -15,6 +15,19 @@ export interface SubmitSolutionForm {
   work_time: number | null
 }
 
+export interface SubscribeForm {
+  shortname: string
+}
+
+export interface ChannelCreateForm {
+  name: string
+}
+
+export interface ChannelResponse {
+  channel_id: number,
+  name: string
+}
+
 export interface EventData {
   event_id: number,
   channel_id: number,
@@ -72,24 +85,10 @@ export class UserService {
     }
   }
 
-  public async channel_unsubscribe(channel: ChannelData): Promise<ErrorResponse | null> {
+  public async channel_subscribe(name: string): Promise<ErrorResponse | SuccessResponse> {
     try {
-      // const api = new Api();
-      // return await api.post<TokenUserData, LoginForm>('/users', form);
-      return null;
-    } catch (e) {
-      const error = e as AxiosError;
-      if (error.response != null)
-        return error.response.data as ErrorResponse;
-      throw e;
-    }
-  }
-
-  public async channel_subscribe(name: string): Promise<ErrorResponse | null> {
-    try {
-      // const api = new Api();
-      // return await api.post<TokenUserData, LoginForm>('/users', form);
-      return null;
+      const api = new Api();
+      return await api.post<SuccessResponse, SubscribeForm>('/user/channel', {shortname: name});
     } catch (e) {
       const error = e as AxiosError;
       if (error.response != null)
@@ -100,9 +99,22 @@ export class UserService {
 
   public async channel_delete(channel_id: number): Promise<ErrorResponse | null> {
     try {
-      // const api = new Api();
-      // return await api.post<TokenUserData, LoginForm>('/users', form);
+      const api = new Api();
+      await api.delete('/user/channel/' + channel_id);
       return null;
+    } catch (e) {
+      const error = e as AxiosError;
+      if (error.response != null)
+        return error.response.data as ErrorResponse;
+      throw e;
+    }
+  }
+
+  public async channel_create(channel_name: string): Promise<ErrorResponse | ChannelData> {
+    try {
+      const api = new Api();
+      const res = await api.post<ChannelResponse, ChannelCreateForm>('/channel', {name: channel_name});
+      return {name: res.name, channel_id: res.channel_id, is_admin: true}
     } catch (e) {
       const error = e as AxiosError;
       if (error.response != null)
