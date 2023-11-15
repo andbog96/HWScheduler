@@ -1,5 +1,6 @@
 # app/db.py
 from .settings import conn
+import datetime
 
 cur = conn.cursor()
 
@@ -69,6 +70,8 @@ def getAllDataByUser(userId: int):
             }
         )
 
+    current_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
     # Получение данных для событий с сортировкой по deadline
     cur.execute(f"""
         SELECT
@@ -82,7 +85,7 @@ def getAllDataByUser(userId: int):
         FROM
             Events
         WHERE
-            Events.eventId = {userId}
+            Events.eventId = {userId} AND Events.deadline > '{current_time}'
         ORDER BY
             Events.deadline DESC;
     """)
