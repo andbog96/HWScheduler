@@ -147,3 +147,37 @@ def getAllDataByUser(userId: int):
         )
     
     return (resChannelsData, eventsData)
+
+
+def update_event(event_id, name, description, deadline):
+    cur.execute(
+        """
+        UPDATE Events
+        SET name = %s, description = %s, deadline = %s
+        WHERE eventId = %s
+        """,
+        (name, description, deadline, event_id)
+    )
+    conn.commit()
+
+
+def check_done(user_id, event_id):
+    cur.execute("SELECT COUNT(*) FROM DoneJobs WHERE userId = %s AND eventId = %s", (user_id, event_id))
+    return cur.fetchone()[0] == 0
+
+
+def perform_event(user_id, event_id, time):
+    cur.execute(
+        """
+        UPDATE Events 
+        SET userCompletedTask = userCompletedTask + 1, sumTime = sumTime + %s
+        WHERE eventId = %s
+        """,
+        (time, event_id)
+    )
+    conn.commit()
+    cur.execute(
+        "INSERT INTO DoneJobs (userId, eventId, time) VALUES (%s, %s, %s)",
+        (user_id, event_id, time)
+    )
+    conn.commit()

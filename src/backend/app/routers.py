@@ -159,3 +159,43 @@ def userInfoRouter():
     }
     
     return make_response(jsonify(result), 200, {'message': "Returns information related to user"})
+
+
+@main_blueprint.route('/event/<int:event_id>', methods=['PUT'])
+def change_event(event_id):
+    if not check_event_exists(event_id):
+        return jsonify({'message': 'Event does not exist'}), 404
+    
+    data = request.get_json()
+    token = data['token']
+
+    if not token:
+        return jsonify({'message': 'Token is missing'}), 401
+    
+    user_id = verify_token(token)
+    if user_id == 'Token is expired' or user_id == 'Invalid token':
+        return jsonify({'message': 'Invalid token'}), 401
+    
+    update_event(event_id, data['name'], data['description'], data['deadline'])
+    return jsonify({'message': 'Event was updated successfully'})
+
+
+@main_blueprint.route('/user/event/<int:event_id>', methods=['POST'])
+def mark_event_as_done(event_id):
+    if not check_event_exists(event_id):
+        return jsonify({'message': 'Event does not exist'}), 404
+    
+    data = request.get_json()
+    token = data['token']
+    if not token:
+        return jsonify({'message': 'Token is missing'}), 401
+    
+    user_id = verify_token(token)
+    if user_id == 'Token is expired' or user_id == 'Invalid token':
+        return jsonify({'message': 'Invalid token'}), 401
+    
+    if not check_done(user_id, event_id):
+        return jsonify({'message': 'Task is already done'}), 400
+    
+    perform_event(user_id, event_id, data['work_time'])
+    return jsonify({'message': 'Event was marked as done'})
