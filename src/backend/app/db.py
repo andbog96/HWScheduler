@@ -22,6 +22,12 @@ def check_event_exists(event_id):
     cur.execute("select count(*) from Events where eventId = %s", (event_id,))
     return cur.fetchone()[0] == 1
 
+def event_exists(channel_id, name, description, deadline):
+    cur.execute(
+        "select count(*) from Events where channelId = %s and name = %s and description = %s and deadline = %s", 
+        (channel_id, name, description, deadline))
+    return cur.fetchone()[0] == 1
+
 def getUserByLogin(login):
     cur.execute("SELECT userId, password FROM Users WHERE login = %s", (login,))
     return cur.fetchone()

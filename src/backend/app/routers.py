@@ -1,5 +1,5 @@
 # app/routes.py
-from flask import Blueprint, jsonify, make_response, request, Flask
+from flask import Blueprint, jsonify, make_response, request
 from app.db import *
 from .utils import generate_token, verify_token
 
@@ -39,7 +39,7 @@ def createUserRoute():
 # Delete an existing event
 @main_blueprint.route('/channel/<int:channel_id>/event/<int:event_id>', methods=['delete'])
 def delete_event(channel_id, event_id):
-    token = request.args.get('token')
+    token = request.headers['token']
     if not token:
         return jsonify({'message': 'token is missing'}), 401
     user_id = verify_token(token)
@@ -56,9 +56,8 @@ def delete_event(channel_id, event_id):
 @main_blueprint.route('/channel', methods=['POST'])
 def createChannelRoute():
     try:
-        data = request.get_json()
-        name = data['name']
-        token = data['token'] 
+        name = request.get_json()['name']
+        token = request.headers['token']
 
         if not token:
             return jsonify({'message': 'Token is missing'}), 404
@@ -90,7 +89,7 @@ def createChannelRoute():
 def subcribeChannel():
 
     data = request.get_json()
-    token = data['token']
+    token = request.headers['token']
     shortname = data['shortname']
 
     userId = verify_token(token)
@@ -116,7 +115,7 @@ def create_event(channel_id):
     if not check_channel_exists(channel_id):
         return jsonify({'message': 'Channel does not exist'}), 404
     data = request.get_json()
-    token = data['token']
+    token = request.headers['token']
     if not token:
         return jsonify({'message': 'Token is missing'}), 401
     user_id = verify_token(token)
@@ -124,13 +123,17 @@ def create_event(channel_id):
         return jsonify({'message': 'Invalid token'}), 401
     if not check_user_rights(channel_id, user_id):
         return jsonify({'message': 'User has not access rights to create event'}), 403
+    name = data['name']
+    description = data['description']
+    deadline = data['deadline']
+    if not event_exists(channel_id, name, description, deadline):
+        return jsonify({'message': 'Event already exists'}), 400
     add_event(channel_id, data['name'], data['description'], data['deadline'])
     return jsonify({'message': 'Event was created successfully'})
     
 @main_blueprint.route('/user/channel/<int:ch_id>', methods=['DELETE'])
 def deleteChannelRouter(ch_id):
-    data = request.get_json()
-    token = data['token']
+    token = request.headers['token']
 
     userId = verify_token(token)
     if userId == 'Token is expired' or userId == 'Invalid token':
@@ -144,8 +147,7 @@ def deleteChannelRouter(ch_id):
 
 @main_blueprint.route('/user/info', methods=['GET'])
 def userInfoRouter():
-    data = request.get_json()
-    token = data['token']
+    token = request.headers['token']
 
     userId = verify_token(token)
     if userId == 'Token is expired' or userId == 'Invalid token':
@@ -167,7 +169,7 @@ def change_event(event_id):
         return jsonify({'message': 'Event does not exist'}), 404
     
     data = request.get_json()
-    token = data['token']
+    token = request.headers['token']
 
     if not token:
         return jsonify({'message': 'Token is missing'}), 401
@@ -186,7 +188,7 @@ def mark_event_as_done(event_id):
         return jsonify({'message': 'Event does not exist'}), 404
     
     data = request.get_json()
-    token = data['token']
+    token = request.headers['token']
     if not token:
         return jsonify({'message': 'Token is missing'}), 401
     
