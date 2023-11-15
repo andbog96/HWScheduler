@@ -85,7 +85,7 @@ def getAllDataByUser(userId: int):
         FROM
             Events
         WHERE
-            Events.eventId = {userId} AND Events.deadline < '{current_time}'
+            Events.eventId = {userId} AND Events.deadline > '{current_time}'
         ORDER BY
             Events.deadline DESC;
     """)
