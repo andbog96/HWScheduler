@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS users, channels, events, subscriptions, donejobs;
 
+
 -- Users table
 CREATE TABLE Users (
     userId SERIAL PRIMARY KEY,
