@@ -1,9 +1,7 @@
 # app/jwt.py
 import jwt
+from .settings import alg, SECRET_KEY
 
-SECRET_KEY = "awdawfaepisfjpsoejfpsejfppjvpoepf"
-
-alg = 'HS256'
 
 def generate_token(user_id):
     payload = {'userId': user_id}
