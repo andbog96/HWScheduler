@@ -71,6 +71,27 @@ def createSubcribe(userId: int, channelId :int):
     cur.execute("INSERT INTO Subscriptions (userId, channelId) VALUES (%s, %s)",(userId, channelId))
     conn.commit()
 
+
+def check_channel_exists(channel_id):
+    cur.execute(
+        "select count(*) from Channels where channelId = %s",
+        (channel_id,)
+    )
+    return cur.fetchone()[0] == 1
+
+def check_user_rights(channel_id, user_id):
+    cur.execute("select createdBy from Channels where channelId = %s", (channel_id,))
+    create_user = cur.fetchone()
+    return create_user is not None and create_user[0] == user_id
+
+def add_event(channel_id, name, description, deadline):
+    cur.execute(
+        "insert into events (channelId, name, description, deadline) values (%s, %s, %s, %s)",
+        (channel_id, name, description, deadline)
+    )
+    conn.commit()
+    
+
 def deleteSubcribe(userId: int, channelId :int):
     cur.execute("DELETE FROM Subscriptions WHERE userId = %s and channelId = %s",
                 (userId, channelId))
