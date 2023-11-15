@@ -51,10 +51,20 @@
     <string name="profile">Profile</string>
     <string name="subscribe">Subscribe</string>
     <string name="subscribe_on_channel">Subscribe on channel</string>
+    <string name="enter_task_estimation_time">Enter task estimation time</string>
+    <string name="submit">Submit</string>
     <string name="logout">Logout</string>
     <string name="new_channel">New Channel</string>
     <string name="channel_name">Channel Name</string>
     <string name="group_name">Group Name</string>
     <string name="event_name">Event Name</string>
     <string name="create_event">Create Event</string>
+    <string name="enter_event_time">Enter event time</string>
+    <string name="task">Task:</string>
+    <string name="deadline">Deadline</string>
+    <string name="edit_task">Edit Task</string>
+    <string name="create_task">Create Task</string>
+    <string name="edit_create_task">Edit/Create Task</string>
+    <string name="task_description">Task description</string>
+    <string name="cancel">Cancel</string>
 </resources>

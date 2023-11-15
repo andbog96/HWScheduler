@@ -1,14 +1,13 @@
 package com.example.hwscheduler.group
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.hwscheduler.R
 import com.example.hwscheduler.event.EventActivity
-import com.example.hwscheduler.event.EventAdapter
 import com.example.hwscheduler.userInfo
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -29,10 +28,11 @@ class GroupEventsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_group_events)
 
-        val channelId = intent.getIntExtra(GROUP_ID, -1)
+        val channelId = intent.getLongExtra(GROUP_ID, -1)
         val events = userInfo.events.filter { channelId == it.channelId }
+        val channel = userInfo.channels.find { channelId == it.channelId }!!
 
-        eventAdapter = GroupEventAdapter()
+        eventAdapter = GroupEventAdapter(this, channel)
         eventAdapter.setData(events)
 
         groupEventsRV = findViewById(R.id.group_events_rv)

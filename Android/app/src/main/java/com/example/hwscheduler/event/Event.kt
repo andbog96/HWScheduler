@@ -1,10 +1,10 @@
 package com.example.hwscheduler.event
 
 data class Event(
-    val eventId: Int,
-    val channelId: Int,
+    val eventId: Long,
+    val channelId: Long,
     val name: String,
     val description: String,
-    val deadline: Int,
-    val estimated: Int
+    val deadline: Long,
+    val estimated: Long
 )

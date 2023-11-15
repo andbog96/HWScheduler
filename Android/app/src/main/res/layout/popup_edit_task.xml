@@ -2,57 +2,58 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/popup_comp_task_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/enter_task_estimation_time"
-        android:layout_margin="16dp"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-
-    <TextView
-        android:id="@+id/popup_comp_task_task_name"
+        android:id="@+id/popup_edit_task_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:hint="@string/task_name"
+        android:hint="@string/edit_create_task"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/popup_comp_task_channel_name" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/popup_comp_task_channel_name"
+        android:id="@+id/popup_edit_task_channel_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:hint="@string/channel_name"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/popup_comp_task_title" />
+        app:layout_constraintTop_toBottomOf="@+id/popup_edit_task_title" />
+
+    <EditText
+        android:id="@+id/popup_edit_task_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:hint="@string/task_name"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/popup_edit_task_channel_name" />
 
     <TextView
-        android:id="@+id/popup_comp_task_deadline"
+        android:id="@+id/popup_edit_task_deadline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="@string/deadline"
-        android:textSize="20sp"
         android:layout_margin="16dp"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/popup_comp_task_task_name" />
+        app:layout_constraintTop_toBottomOf="@+id/popup_edit_task_name" />
 
     <EditText
-        android:id="@+id/popup_comp_task_time_et"
+        android:id="@+id/popup_edit_task_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:hint="@string/enter_event_time"
-        android:inputType="numberDecimal"
+        android:hint="@string/task_description"
+        android:inputType="text"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/popup_comp_task_deadline" />
+        app:layout_constraintTop_toBottomOf="@+id/popup_edit_task_deadline" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

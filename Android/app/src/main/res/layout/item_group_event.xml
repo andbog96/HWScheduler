@@ -40,7 +40,7 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="6dp"
             android:layout_weight="1"
-            android:src="@drawable/ic_delete" />
+            android:src="@drawable/ic_edit" />
 
         <ImageView
             android:id="@+id/event_remove_img"
@@ -48,7 +48,7 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="6dp"
             android:layout_weight="1"
-            android:src="@drawable/ic_edit" />
+            android:src="@drawable/ic_delete" />
 
     </LinearLayout>
 

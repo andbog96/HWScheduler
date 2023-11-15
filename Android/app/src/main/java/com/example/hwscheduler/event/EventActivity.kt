@@ -1,7 +1,9 @@
 package com.example.hwscheduler.event
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.EditText
@@ -10,9 +12,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.hwscheduler.R
+import com.example.hwscheduler.app.HWApplication
 import com.example.hwscheduler.group.GroupActivity
 import com.example.hwscheduler.userInfo
+import com.example.hwscheduler.userToken
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 class EventActivity : AppCompatActivity() {
 
@@ -21,24 +27,25 @@ class EventActivity : AppCompatActivity() {
     private lateinit var bottomNavView: BottomNavigationView
     private lateinit var subscribeBtn: Button
 
-    private lateinit var taskTimeEt: EditText
+
+    @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_event)
 
-        eventAdapter = EventAdapter()
+        HWApplication.instance.hwApi.userInfo(userToken!!)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                userInfo = it
+                updateUI()
+            }, {
+                Log.e("error: ", "$it")
+            })
 
-        val map = mutableMapOf<Int, String>()
-        userInfo.channels.forEach { map[it.channelId] = it.name }
-
-        eventAdapter.setData(userInfo.events, map)
-
+        eventAdapter = EventAdapter(this)
         eventRV = findViewById(R.id.event_rv)
-        eventRV.layoutManager = LinearLayoutManager(this)
-        eventRV.adapter = eventAdapter
-
         bottomNavView = findViewById(R.id.event_bottom_nav)
-        bottomNavView.selectedItemId = R.id.event_tab
         bottomNavView.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.event_tab -> true
@@ -54,15 +61,24 @@ class EventActivity : AppCompatActivity() {
 
         subscribeBtn = findViewById(R.id.subscribe_btn)
         subscribeBtn.setOnClickListener { subscribePopup() }
+        updateUI()
+    }
+
+    private fun updateUI() {
+        val map = mutableMapOf<Long, String>()
+        userInfo.channels.forEach { map[it.channelId] = it.name }
+        eventAdapter.setData(userInfo.events, map)
+        bottomNavView.selectedItemId = R.id.event_tab
+        eventRV.layoutManager = LinearLayoutManager(this)
+        eventRV.adapter = eventAdapter
     }
 
     private fun subscribePopup() {
         val inflater = LayoutInflater.from(this@EventActivity)
         val view = inflater.inflate(R.layout.popup_subscribe, null)
-        taskTimeEt = view.findViewById(R.id.channel_name)
+        val channelName: EditText = view.findViewById(R.id.channel_name)
 
         val alertDialog = AlertDialog.Builder(this@EventActivity).apply {
-            setTitle(R.string.subscribe_on_channel)
             setView(view)
             setCancelable(false)
             setPositiveButton(R.string.subscribe, null)
@@ -72,7 +88,7 @@ class EventActivity : AppCompatActivity() {
         alertDialog.setOnShowListener {
             val button = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)
             button.setOnClickListener {
-                val channelName = taskTimeEt.text.toString()
+                val channelName = channelName.text.toString()
                 if (channelName.isNotEmpty()) alertDialog.dismiss()
             }
         }

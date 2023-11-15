@@ -53,4 +53,21 @@ dependencies {
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation("com.github.javafaker:javafaker:1.0.2")
     implementation("com.github.bumptech.glide:glide:4.14.2")
+
+    // https://mvnrepository.com/artifact/com.squareup.retrofit2/converter-moshi
+    implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
+
+    implementation("io.reactivex.rxjava2:rxjava:2.2.21")
+    implementation("io.reactivex.rxjava2:rxandroid:2.1.1")
+    implementation("io.reactivex.rxjava2:rxkotlin:2.4.0")
+    implementation("com.squareup.retrofit2:adapter-rxjava2:2.9.0")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.2.2") // core library
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
+    // library for json specifically
+
+    implementation("com.squareup.okhttp3:okhttp:4.9.1") // ok http
+    implementation("com.squareup.retrofit2:retrofit:2.9.0") // retrofit
+    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0")
+    // retrofit converter
 }
