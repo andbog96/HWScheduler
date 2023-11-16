@@ -1,6 +1,5 @@
 <template>
   <common-form>
-    <user-profile :login="userData.login"/>
     <my-label>Manage {{channel.name}} events: </my-label>
     <common-list :not-empty="true">
       <list-item v-for="(cur, index) in events" :key="index">
@@ -23,7 +22,6 @@
   import {EventData, UserService} from '@/services/UserService';
   import store from "@/store";
   import router from "@/router/router";
-  import UserProfile from "@/components/UI/composits/UserProfile.vue";
   import MyLabel from "@/components/UI/primitives/MyLabel.vue";
   import EventItem from "@/components/UI/list/results/eventItem.vue";
   import CommonList from "@/components/UI/list/CommonList.vue";
@@ -33,13 +31,12 @@
   import LabelInput from "@/components/UI/composits/LabelInput.vue";
   import SeparateLine from "@/components/UI/primitives/SeparateLine.vue";
   import updateDataMixin from "@/components/mixins/updateDataMixin";
-  import MyInput from "@/components/UI/primitives/MyInput.vue";
 
   export default defineComponent({
     name: "SignUpPage",
     mixins: [updateDataMixin],
     components: {
-      SeparateLine, LabelInput, MyButton, MyArea, MyLabel, UserProfile, EventItem, CommonList, ListItem},
+      SeparateLine, LabelInput, MyButton, MyArea, MyLabel, EventItem, CommonList, ListItem},
     async created() {
       if (!store.state.auth.isAuth)
         await router.push("/");

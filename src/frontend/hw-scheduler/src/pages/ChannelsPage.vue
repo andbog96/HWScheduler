@@ -1,8 +1,6 @@
 <template>
   <div class="profile">
     <common-form>
-      <user-profile :login="userData.login" :go-to-channels="false"/>
-
       <my-label>Managing channels:</my-label>
       <common-list :not-empty="managing.length > 0">
         <list-item v-for="(cur, index) in managing" :key="index">
@@ -34,21 +32,19 @@
 <script lang="ts">
   import {defineComponent} from "vue";
   import {ChannelData, EventData, UserInfo, UserService} from "@/services/UserService";
-  import errorMixin from "@/components/mixins/errorMixin";
   import store from "@/store";
   import MyLabel from "@/components/UI/primitives/MyLabel.vue";
   import ChannelItem from "@/components/UI/list/results/channelItem.vue";
   import CommonList from "@/components/UI/list/CommonList.vue";
   import ListItem from "@/components/UI/list/ListItem.vue";
   import router from "@/router/router";
-  import UserProfile from "@/components/UI/composits/UserProfile.vue";
   import updateDataMixin from "@/components/mixins/updateDataMixin";
   import MyButton from "@/components/UI/primitives/MyButton.vue";
   import MyInput from "@/components/UI/primitives/MyInput.vue";
 
   export default defineComponent({
     name: "SignInPage",
-    components: {MyInput, MyButton, UserProfile, ChannelItem, MyLabel, CommonList, ListItem},
+    components: {MyInput, MyButton, ChannelItem, MyLabel, CommonList, ListItem},
     mixins: [updateDataMixin],
     async created() {
       if (!store.state.auth.isAuth)

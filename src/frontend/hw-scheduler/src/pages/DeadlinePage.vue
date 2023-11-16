@@ -1,7 +1,6 @@
 <template>
   <div class="deadlineList">
     <common-form>
-      <user-profile :login="userData.login" :go-to-events="false"/>
       <div v-if="to_submit">
         <event-item :event="event"/>
         <label-input v-model="time" placeholder="Затраченное время: " label="Время:"/>
@@ -36,7 +35,6 @@
     mixins: [updateDataMixin],
     components: {
       LabelInput,
-      UserProfile,
       MyButton,
       EventItem,
       CommonList,
@@ -59,7 +57,6 @@
         await router.push("/");
 
       const res = await this.us.userInfo() as UserInfo
-      console.log(res)
       this.$data.info = res
       await this.saveData({data: res})
     },
