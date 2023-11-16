@@ -66,9 +66,7 @@
         this.$data.event = event
       },
       async send() {
-        console.log(this.$data.time)
         const res = parseInt(this.$data.time)
-        console.log(res)
         if (this.$data.event && !isNaN(res)) {
           await this.us.event_completed(this.$data.event, res)
           await this.remove_event(this.$data.event);

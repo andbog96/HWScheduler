@@ -145,7 +145,6 @@ export class UserService {
   public async event_create(form: EventCreateForm, channel: number): Promise<ErrorResponse | null> {
     try {
       const api = new Api();
-      console.log(form)
       await api.post<undefined, EventCreateForm>('/channel/' + channel + '/event', form);
       return null;
     } catch (e) {

@@ -40,7 +40,6 @@ export default defineComponent({
 
     async login() {
       const response = await this.us.signInUp(this.form);
-      console.log(response)
       if (`token` in response)
         await this
             .loggedIn({token: response.token, login: this.form.login})
