@@ -13,7 +13,7 @@ object ErrorUtils {
 
     @SuppressLint("InflateParams")
     fun showMessage(e: Throwable, activity: Activity) {
-        val mes = e.toString()
+        val mes = e.message?: e.toString()
         Log.e("Error: ", mes)
 
         val layout: View = activity.layoutInflater.inflate(R.layout.layout_error, null)

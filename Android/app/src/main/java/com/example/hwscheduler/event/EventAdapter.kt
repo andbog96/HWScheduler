@@ -107,7 +107,11 @@ class EventAdapter(
         taskDeadline.text = Date(event.deadline).dayMonthYearHoursMinutes()
         taskDescription.text = event.description
         taskChannel.text = channelIdToName[event.channelId].toString()
-        taskEstimated.text = "~ ${event.estimated} m."
+
+        val timeStr: String =
+            if (event.estimated >= 60) String.format("~ %.1f h.", event.estimated / 60.0)
+            else "~ ${event.estimated} m."
+        taskEstimated.text = timeStr
 
         val alertDialog = AlertDialog.Builder(activity).apply {
             setView(view)
