@@ -1,5 +1,5 @@
 import psycopg2
-import random, string
+
 
 conn = psycopg2.connect(
     dbname="postgres",

@@ -72,6 +72,7 @@ def check_channel_exists(channel_id):
     )
     return cur.fetchone()[0] == 1
 
+# check if user is creator of the channel
 def check_user_rights(channel_id, user_id):
     cur.execute("select createdBy from Channels where channelId = %s", (channel_id,))
     create_user = cur.fetchone()
@@ -86,8 +87,12 @@ def add_event(channel_id, name, description, deadline):
     
 
 def deleteSubcribe(userId: int, channelId :int):
-    cur.execute("DELETE FROM Subscriptions WHERE userId = %s and channelId = %s",
-                (userId, channelId))
+    # delete the channel if user is creator of the channel
+    if check_user_rights(channel_id=channelId, user_id=userId):
+        cur.execute("DELETE FROM Channels WHERE channelId = %s", (channelId,))
+    else:
+        cur.execute("DELETE FROM Subscriptions WHERE userId = %s and channelId = %s",
+                    (userId, channelId))
     conn.commit()
     
 def getAllDataByUser(userId: int):
@@ -152,7 +157,7 @@ def getAllDataByUser(userId: int):
             }
         )
     
-    return (resChannelsData, eventsData)
+    return (resChannelsData, resEventsData)
 
 
 def update_event(event_id, name, description, deadline):
