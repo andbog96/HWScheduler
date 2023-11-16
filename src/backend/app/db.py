@@ -147,14 +147,14 @@ def getAllDataByUser(userId: int):
 
     for i in eventsData:
         resEventsData.append(
-            {
+            dict({
                 "event_id": i[0],
                 "channel_id": i[1],
                 "name": i[2],
                 "description": i[3],
                 "deadline": i[4],
                 "estimated": 5 if i[5] == 0  else i[6]/i[5]
-            }
+            })
         )
     
     return (resChannelsData, resEventsData)
