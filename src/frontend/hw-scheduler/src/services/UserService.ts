@@ -23,6 +23,12 @@ export interface ChannelCreateForm {
   name: string
 }
 
+export interface EventCreateForm {
+  name: string,
+  description: string,
+  deadline: string
+}
+
 export interface ChannelResponse {
   channel_id: number,
   name: string
@@ -115,6 +121,33 @@ export class UserService {
       const api = new Api();
       const res = await api.post<ChannelResponse, ChannelCreateForm>('/channel', {name: channel_name});
       return {name: res.name, channel_id: res.channel_id, is_admin: true}
+    } catch (e) {
+      const error = e as AxiosError;
+      if (error.response != null)
+        return error.response.data as ErrorResponse;
+      throw e;
+    }
+  }
+
+  public async delete_event(event_id: number, channel_id: number): Promise<ErrorResponse | null> {
+    try {
+      const api = new Api();
+      await api.delete('/channel/' + channel_id + '/event/' + event_id);
+      return null;
+    } catch (e) {
+      const error = e as AxiosError;
+      if (error.response != null)
+        return error.response.data as ErrorResponse;
+      throw e;
+    }
+  }
+
+  public async event_create(form: EventCreateForm, channel: number): Promise<ErrorResponse | null> {
+    try {
+      const api = new Api();
+      console.log(form)
+      await api.post<undefined, EventCreateForm>('/channel/' + channel + '/event', form);
+      return null;
     } catch (e) {
       const error = e as AxiosError;
       if (error.response != null)
