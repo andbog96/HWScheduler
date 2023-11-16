@@ -15,25 +15,22 @@ services:
       - ./src/backend/db/create_databases.sql:/docker-entrypoint-initdb.d/01_init.sql
       - ./src/backend/db/example_insert.sql:/docker-entrypoint-initdb.d/02_insert_values.sql
   
-  backend-main:
-    build:
-      context: .
-      dockerfile: ./config/main_app.dockerfile
-    restart: on-failure
-    ports:
-      - "5000:5000/tcp"
-    depends_on:
-      - data-base
+  # backend-main:
+  #   build:
+  #     context: .
+  #     dockerfile: ./config/main_app.dockerfile
+  #   restart: on-failure
+  #   ports:
+  #     - "5000:5000/tcp"
+  #   depends_on:
+  #     - data-base
   
-  nginx:
-    image: 'byjg/nginx-extras:master'
-    ports:
-      - "9091:9091"
-    volumes:
-      - ./config/nginx.conf:/etc/nginx/nginx.conf
-      # - ./modules/WEB/src/main/resources/static:/usr/share/nginx/static
-    depends_on:
-      - backend-main
-
-networks:
-  nginx-network:
+  # nginx:
+  #   image: 'byjg/nginx-extras:master'
+  #   ports:
+  #     - "80:80"
+  #   volumes:
+  #     - ./config/nginx.conf:/etc/nginx/nginx.conf
+  #     # - ./modules/WEB/src/main/resources/static:/usr/share/nginx/static
+  #   depends_on:
+  #     - backend-main
