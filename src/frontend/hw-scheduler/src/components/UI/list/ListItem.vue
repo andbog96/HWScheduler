@@ -22,8 +22,12 @@
 
 <style scoped>
   .element {
-    border-bottom: 3px solid #ccc;
-    margin-top: -3px;
+    border: 3px solid #ccc;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    margin: 3% 0;
+    border-radius: 8px;
   }
   .hovered:hover {
     background-color: #d8d8d8;

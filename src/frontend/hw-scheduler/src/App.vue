@@ -22,6 +22,9 @@
     padding: 0;
     box-sizing: border-box;
     font-size: 16px;
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+    font-height: 22px;
   }
 
   header {

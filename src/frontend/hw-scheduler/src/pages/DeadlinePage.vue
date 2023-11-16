@@ -1,19 +1,21 @@
 <template>
-  <common-form>
-    <user-profile :login="userData.login" :go-to-events="false"/>
-    <div v-if="to_submit">
-      <event-item :event="event"/>
-      <label-input v-model="time" placeholder="Затраченное время: " label="Время:"/>
-      <my-button :classes="'add'" @click="send">Отправить</my-button>
-      <my-button :classes="'remove'" @click="revert">Отмена</my-button>
-    </div>
-    <common-list v-if="this.$data.info" :not-empty="this.$data.info.events.length > 0">
-      <list-item v-for="(cur, index) in this.$data.info.events" :key="index">
-        <event-item :event=cur :channel="searchChannel(cur.channel_id)"/>
-        <my-button @click="() => complete(cur)">Submit</my-button>
-      </list-item>
-    </common-list>
-  </common-form>
+  <div class="deadlineList">
+    <common-form>
+      <user-profile :login="userData.login" :go-to-events="false"/>
+      <div v-if="to_submit">
+        <event-item :event="event"/>
+        <label-input v-model="time" placeholder="Затраченное время: " label="Время:"/>
+        <my-button :classes="'add'" @click="send">Отправить</my-button>
+        <my-button :classes="'remove'" @click="revert">Отмена</my-button>
+      </div>
+      <common-list v-if="this.$data.info" :not-empty="this.$data.info.events.length > 0">
+        <list-item v-for="(cur, index) in this.$data.info.events" :key="index">
+          <event-item :event=cur :channel="searchChannel(cur.channel_id)"/>
+          <my-button @click="() => complete(cur)">Submit</my-button>
+        </list-item>
+      </common-list>
+    </common-form>
+  </div>
 </template>
 
 <script lang="ts">
@@ -110,5 +112,13 @@
 
 .userDataContainer button {
   margin-top: 20px;
+}
+list-item{
+  display: flex;
+  justify-content: space-between;
+}
+.deadlineList{
+  width: 80%;
+  margin: 3% 10%;
 }
 </style>

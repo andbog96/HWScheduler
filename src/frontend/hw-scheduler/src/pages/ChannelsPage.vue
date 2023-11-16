@@ -7,8 +7,8 @@
       <common-list :not-empty="managing.length > 0">
         <list-item v-for="(cur, index) in managing" :key="index">
           <channel-item :channel="cur"/>
-          <my-button @click="() => to_manage(cur)">Модерировать</my-button>
-          <my-button @click="() => to_delete(cur)" :classes="'remove'">Удалить</my-button>
+          <my-button @click="() => to_manage(cur)" :classes="'edit'"></my-button>
+          <my-button @click="() => to_delete(cur)" :classes="'remove'"></my-button>
         </list-item>
         <list-item>
           <my-input placeholder="Имя канала: " v-model="this.create_name"></my-input>
@@ -115,4 +115,5 @@
     margin-top: 10px;
     margin-bottom: 30px;
   }
+
 </style>

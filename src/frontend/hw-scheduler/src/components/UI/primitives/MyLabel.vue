@@ -15,7 +15,6 @@
     line-height: 40px;
     min-width: 100px;
     font-size: 18px;
-
-    font-weight: bold;
+    color: #394a51;
   }
 </style>

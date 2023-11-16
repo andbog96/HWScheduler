@@ -26,6 +26,7 @@
     border-bottom: 2px solid #ccc;
     background-color: #f8f8f8;
     font-size: 18px;
+    font-family: 'Lato', italic;
 
     padding: 5px;
   }
