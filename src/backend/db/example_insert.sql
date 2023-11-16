@@ -1,44 +1,82 @@
--- Users
-INSERT INTO Users (login, password) VALUES 
-    ('user1', 'password1'),
-    ('user2', 'password2'),
-    ('user3', 'password3');
+INSERT INTO Users (login, password) VALUES
+	('user1', 'password1'),
+	('user2', 'password2'),
+	('user3', 'password3'),
+	('user4', 'password4'),
+	('user5', 'password5'),
+	('user6', 'password6'),
+	('user7', 'password7'),
+	('user8', 'password8'),
+	('user9', 'password9'),
+	('user10', 'password10');
 
 -- Channels
-INSERT INTO Channels (name, createdBy) VALUES 
-    ('Channel 1', 1),
-    ('Channel 2', 2),
-    ('Channel 3', 3),
-    ('db_itmo', 2),
-    ('fp_itmo', 1),
-    ('ml-itmo', 1),
-    ('cpp-itmo', 2);
+INSERT INTO Channels (name, createdBy) VALUES
+	('ИТМО MSE ФП 2023', 1),
+    ('ИТМО MSE Алгоритмы 2023/2024', 1),
+    ('ИТМО MSE ML 2023', 1),
+	('ИТМО MSE ДМ 2023', 1),
+    ('ИТМО MSE C++ 2023', 1),
+	('ИТМО MSE Python 2023', 1),
+    ('ВШЭ 3 курс ML 2023', 2),
+	('ВШЭ 3 курс ДМ 2023', 2),
+    ('ВШЭ ПМИ 2 курс Формальные Языки', 2),
+    ('ИТМО DevTools Программная инженерия 2023', 3);
 
 -- Events
-INSERT INTO Events (channelId, name, description, deadline, userCompletedTask, sumTime) VALUES 
-    (1, 'Event 1', 'Description 1', '2023-01-01', 1, 30),
-    (2, 'Event 2', 'Description 2', '2023-02-01', 1, 45),
-    (3, 'Event 3', 'Description 3', '2023-03-01', 1, 60),
-    (4, 'LR1', 'Do or Die', '2023-11-20', 0, 0),
-    (5, 'LR1', 'Church', '2023-11-20', 0, 0),
-    (5, 'LR2', 'Foldl', '2023-11-25', 0, 0),
-    (6, 'LR1', 'K-nearest','2023-11-20', 1, 150),
-    (6, 'LR2', 'Perceptron', '2023-11-23', 1, 100),
-    (7, 'LR1', 'cls-07', '2023-11-20', 0, 0),
-    (7, 'LR2', 'bignum', '2023-11-30', 1, 25);
+INSERT INTO Events (channelId, name, description, deadline) VALUES
+	(1, 'ДЗ 7 ФП', 'Свертки', '2023-11-18'),
+	(4, 'ДЗ 3 ДM', 'Числа Стирлинга', '2023-10-20'),
+    (1, 'ДЗ 8 ФП', 'Аппликативные функторы', '2023-11-20'),
+    (1, 'ДЗ 9 ФП', 'Использование аппликативных функторов', '2023-11-27'),
+    (2, 'ДЗ 7 Алгоритмы', 'Динамическое прораммирование', '2023-11-18'),
+	(2, 'ДЗ 6 Алгоритмы', 'Быстрая сортировка', '2023-11-25'),
+	(3, 'ДЗ 6 ML', 'Perceptron', '2023-12-7'),
+	(3, 'ДЗ 5 ML', 'Линейная регрессия', '2023-11-30'),
+	(3, 'ДЗ 4 ML', 'Кластеризация', '2023-11-23'),
+	(3, 'ДЗ 3 ML', 'KNN', '2023-11-18'),
+	(4, 'ДЗ 6 ДМ', 'Теория вероятности', '2023-11-20'),
+	(4, 'ДЗ 7 ДМ', 'Схема Бернулли', '2023-11-27'),
+	(4, 'ДЗ 8 ДМ', 'Случайные величины', '2023-12-4'),
+	(5, 'Дорешка 5 С++', 'ООП', '2023-11-27'),
+	(5, 'Дорешка 6 С++', 'Наследование', '2023-12-4'),
+	(5, 'ДЗ 2 С++', 'Big Num', '2023-12-4'),
+	(6, 'ДЗ 1 Python', 'Python основы', '2023-12-4');
+	
 
 -- Subscriptions
-INSERT INTO Subscriptions VALUES 
-    (1, 1),
-    (2, 2),
-    (3, 3),
-    (1, 4),
-    (1, 5),
-    (1, 6),
-    (1, 7);
-
+INSERT INTO Subscriptions (userId, channelId) VALUES
+	(3, 1),
+    (4, 1),
+    (5, 1),
+	(3, 2),
+    (4, 2),
+    (5, 2),
+	(3, 3),
+    (4, 3),
+    (5, 3),
+	(3, 4),
+    (4, 4),
+    (5, 4),
+	(3, 5),
+    (4, 5),
+    (5, 5),
+	(3, 6),
+    (4, 6),
+    (5, 6),
+	(6, 7),
+	(6, 8),
+	(7, 7),
+	(7, 8);
+	
 -- DoneJobs
-INSERT INTO DoneJobs (userId, eventId, time) VALUES 
-    (1, 1, 10),
-    (2, 2, 20),
-    (3, 3, 30);
+INSERT INTO DoneJobs (userId, eventId, time) VALUES
+	(1, 1, 200),
+    (3, 1, 240),
+    (5, 1, 300),	
+	(1, 2, 120),
+    (3, 2, 200),
+    (5, 2, 230),
+	(3, 3, 300);
+	(3, 5, 400);
+	
