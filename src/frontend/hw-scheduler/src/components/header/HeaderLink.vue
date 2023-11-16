@@ -23,14 +23,17 @@ export default defineComponent({
 <style scoped>
 a {
   height: 30px;
-  line-height: 30px;
+  /*line-height: 30px;*/
 
   color: white;
-  text-decoration: underline;
-
+  text-decoration: none;
+  /*font-weight: bolder;*/
+  font-size: 130%;
+  font-style: italic;
+  line-height: 180%;
 }
 
 a:hover {
-  color: blue;
+  color: #471002;
 }
 </style>
