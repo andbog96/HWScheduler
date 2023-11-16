@@ -73,7 +73,8 @@ def createChannelRoute():
 
         channelId = createChannel(name, userId)
 
-        channel = getChannelIdByName(name)
+        createSubcribe(userId,channelId)
+
         response_data = {'name': name, 'channel_id' : channelId}
         status_code = 200
         message = "Channel created successfully"
@@ -126,7 +127,7 @@ def create_event(channel_id):
     name = data['name']
     description = data['description']
     deadline = data['deadline']
-    if not event_exists(channel_id, name, description, deadline):
+    if event_exists(channel_id, name, description, deadline):
         return jsonify({'message': 'Event already exists'}), 400
     add_event(channel_id, data['name'], data['description'], data['deadline'])
     return jsonify({'message': 'Event was created successfully'})

@@ -77,6 +77,6 @@ INSERT INTO DoneJobs (userId, eventId, time) VALUES
 	(1, 2, 120),
     (3, 2, 200),
     (5, 2, 230),
-	(3, 3, 300);
+	(3, 3, 300),
 	(3, 5, 400);
 	

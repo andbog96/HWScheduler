@@ -99,7 +99,7 @@ def getAllDataByUser(userId: int):
     
     # Получение данных для каналов с сортировкой по deadline
     cur.execute(f"""
-        SELECT
+        SELECT DISTINCT 
             Channels.channelId AS channel_id,
             Channels.name AS name,
             CASE WHEN Channels.createdBy = {userId} THEN TRUE ELSE FALSE END AS is_admin
@@ -123,29 +123,30 @@ def getAllDataByUser(userId: int):
     current_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     # Получение данных для событий с сортировкой по deadline
-    cur.execute(f"""
-        SELECT
-            Events.eventId AS event_id,
-            Events.channelId AS channel_id,
-            Events.name AS name,
-            Events.description AS description,
-            Events.deadline AS deadline,
-            Events.userCompletedTask AS completedTask,
-            Events.sumTime AS sumTime
-        FROM
-            Events
-        INNER join Subscriptions
-        on Subscriptions.channelId = Events.channelId
-        WHERE
-            Subscriptions.userId = {userId} AND Events.deadline > '{current_time}'
-        ORDER BY
-            Events.deadline;
-    """)
+    cur.execute(f"""SELECT DISTINCT 
+            Events.eventId AS event_id, 
+            Events.channelId AS channel_id, 
+            Events.name AS name, 
+            Events.description AS description, 
+            Events.deadline AS deadline, 
+            Events.userCompletedTask AS completedTask, 
+            Events.sumTime AS sumTime 
+        FROM 
+            Events 
+        INNER join Subscriptions 
+        on Subscriptions.channelId = Events.channelId 
+        LEFT join DoneJobs 
+        on Subscriptions.userId = DoneJobs.userId AND Events.eventId = DoneJobs.eventId 
+        WHERE 
+            Subscriptions.userId = {userId} AND Events.deadline > '{current_time}' AND (DoneJobs.userId is NULL OR DoneJobs.eventId is NULL) 
+        ORDER BY 
+            Events.deadline;""")
     eventsData = cur.fetchall()
 
     resEventsData = []
 
     for i in eventsData:
+        print(i)
         resEventsData.append(
             dict({
                 "event_id": i[0],
