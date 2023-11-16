@@ -21,7 +21,7 @@ export default defineComponent({
         async remove_channel(channel: ChannelData) {
             const data = store.state.auth.data;
             await this.saveData({data: {
-                channels: data.channels.filter(ch => ch != channel),
+                channels: data.channels.filter(ch => ch.channel_id != channel.channel_id),
                 events: data.events.filter(ev => ev.channel_id != channel.channel_id),
             }})
         }
