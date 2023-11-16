@@ -162,7 +162,7 @@ class DB:
                     "name": i[2],
                     "description": i[3],
                     "deadline": i[4],
-                    "estimated": 300 if i[5] == 0  else i[6]/i[5]
+                    "estimated": 300 if i[5] == 0  else int(i[6]/i[5])
                 })
             )
         
