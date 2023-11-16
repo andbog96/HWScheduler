@@ -21,50 +21,55 @@ interface HWAPI {
     ): Single<Token>
 
     @GET("user/info")
-//    @HTTP(method = "GET", path = "user/info", hasBody = true)
     fun userInfo(
         @Header(value = "token") token: String
     ): Single<UserInfo>
 
     @POST("channel")
     fun createChannel(
+        @Header(value = "token") token: String,
         @Body channelReq: CreateChannelReq
     ): Single<Group>
 
     @POST("user/channel")
     fun subscribe(
+        @Header(value = "token") token: String,
         @Body channelReq: SubscribeChannelReq
     ): Completable
 
     @DELETE("user/channel/{ch_id}")
     fun unsubscribe(
-        @Path("ch_id") chId: Long,
-        @Body token: Token
+        @Header(value = "token") token: String,
+        @Path("ch_id") chId: Long
     ): Completable
 
     @POST("channel/{ch_id}/event")
     fun createEvent(
+        @Header(value = "token") token: String,
         @Path("ch_id") chId: Long,
         @Body eventReq: CreateEventReq
     ): Completable
 
     @PUT("event/{ev_id}")
     fun updateEvent(
+        @Header(value = "token") token: String,
         @Path("ev_id") evId: Long,
         @Body eventReq: CreateEventReq
     ): Completable
 
-    @DELETE("event/{ev_id}")
+    @DELETE("channel/{ch_id}/event/{ev_id}")
     fun deleteEvent(
-        @Path("ev_id") evId: Long,
-        @Body token: Token
+        @Header(value = "token") token: String,
+        @Path("ch_id") chId: Long,
+        @Path("ev_id") evId: Long
     ): Completable
 
-    @POST("event/{ev_id}")
+    @POST("user/event/{ev_id}")
     fun completeEvent(
+        @Header(value = "token") token: String,
         @Path("ev_id") evId: Long,
         @Body completeEventReq: CompleteEventReq
-    )
+    ): Completable
 
 }
 
@@ -78,23 +83,19 @@ data class Token(
 )
 
 data class CreateChannelReq(
-    @field:Json(name = "name") val name: String,
-    @field:Json(name = "token") val token: String
+    @field:Json(name = "name") val name: String
 )
 
 data class SubscribeChannelReq(
     @field:Json(name = "shortname") val name: String,
-    @field:Json(name = "token") val token: String
 )
 
 data class CreateEventReq(
     @field:Json(name = "name") val name: String,
     @field:Json(name = "description") val description: String,
     @field:Json(name = "deadline") val deadline: String,
-    @field:Json(name = "token") val token: String,
 )
 
 data class CompleteEventReq(
-    @field:Json(name = "token") val token: String,
     @field:Json(name = "work_time") val workTime: Long
 )

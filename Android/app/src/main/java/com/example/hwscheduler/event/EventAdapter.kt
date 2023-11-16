@@ -11,12 +11,19 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.example.hwscheduler.ErrorUtils
 import com.example.hwscheduler.R
+import com.example.hwscheduler.api.CompleteEventReq
+import com.example.hwscheduler.app.HWApplication
 import com.example.hwscheduler.dayMonthYearHoursMinutes
+import com.example.hwscheduler.userToken
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import java.util.Date
 
 class EventAdapter(
-    private val activity: Activity
+    private val activity: Activity,
+    private val updateUI: () -> Unit
 ) : RecyclerView.Adapter<EventViewHolder>() {
 
     private var data: List<Event> = listOf()
@@ -42,6 +49,7 @@ class EventAdapter(
         }
     }
 
+    @SuppressLint("CheckResult")
     private fun completeEvent(event: Event) {
         val inflater = LayoutInflater.from(activity)
         val view = inflater.inflate(R.layout.popup_complete_task, null)
@@ -66,26 +74,40 @@ class EventAdapter(
             button.setOnClickListener {
                 val taskTimeStr = taskTimeEt.text.toString()
                 if (taskTimeStr.isNotEmpty()) {
-                    var taskTime = taskTimeStr.toInt()
+                    val taskTime = taskTimeStr.toLong()
                     alertDialog.dismiss()
+                    HWApplication.instance.hwApi.completeEvent(
+                        userToken!!,
+                        event.eventId,
+                        CompleteEventReq(taskTime)
+                    ).subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({
+                            updateUI()
+                        }, {
+                            ErrorUtils.showMessage(it, activity)
+                        })
                 }
             }
         }
         alertDialog.show()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun showEventInfo(event: Event) {
         val inflater = LayoutInflater.from(activity)
         val view = inflater.inflate(R.layout.popup_info_task, null)
         val taskName: TextView = view.findViewById(R.id.popup_info_task_name)
         val taskChannel: TextView = view.findViewById(R.id.popup_info_task_channel_name)
         val taskDeadline: TextView = view.findViewById(R.id.popup_info_task_deadline)
+        val taskEstimated: TextView = view.findViewById(R.id.popup_info_task_estimated)
         val taskDescription: TextView = view.findViewById(R.id.popup_info_task_description)
 
         taskName.text = event.name
         taskDeadline.text = Date(event.deadline).dayMonthYearHoursMinutes()
         taskDescription.text = event.description
         taskChannel.text = channelIdToName[event.channelId].toString()
+        taskEstimated.text = "~ ${event.estimated} m."
 
         val alertDialog = AlertDialog.Builder(activity).apply {
             setView(view)

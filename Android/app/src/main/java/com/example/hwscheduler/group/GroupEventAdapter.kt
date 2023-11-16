@@ -1,7 +1,5 @@
 package com.example.hwscheduler.group
 
-import com.example.hwscheduler.event.Event
-
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
@@ -14,15 +12,23 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
+import com.example.hwscheduler.ErrorUtils
 import com.example.hwscheduler.R
+import com.example.hwscheduler.api.CreateEventReq
+import com.example.hwscheduler.app.HWApplication
 import com.example.hwscheduler.dayMonthYearHoursMinutes
+import com.example.hwscheduler.event.Event
+import com.example.hwscheduler.userToken
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import java.util.Calendar
 import java.util.Date
 import java.util.GregorianCalendar
 
 class GroupEventAdapter(
     private val activity: Activity,
-    private val channel: Group
+    private val channel: Group,
+    private val updateUI: () -> Unit
 ) : RecyclerView.Adapter<GroupEventViewHolder>() {
 
     private var data: List<Event> = listOf()
@@ -32,6 +38,7 @@ class GroupEventAdapter(
         notifyDataSetChanged()
     }
 
+    @SuppressLint("CheckResult")
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GroupEventViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return GroupEventViewHolder(
@@ -45,6 +52,17 @@ class GroupEventAdapter(
                 val event = data[this.adapterPosition]
                 editEvent(event, channel)
             }
+            itemView.findViewById<ImageView>(R.id.event_remove_img).setOnClickListener {
+                val event = data[this.adapterPosition]
+                HWApplication.instance.hwApi.deleteEvent(userToken!!, event.channelId, event.eventId)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                        updateUI()
+                    }, {
+                        ErrorUtils.showMessage(it, activity)
+                    })
+            }
         }
     }
 
@@ -55,7 +73,7 @@ class GroupEventAdapter(
         holder.bind(event)
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "CheckResult")
     private fun editEvent(event: Event, channel: Group) {
         val inflater = LayoutInflater.from(activity)
         val view = inflater.inflate(R.layout.popup_edit_task, null)
@@ -111,9 +129,20 @@ class GroupEventAdapter(
             button.setOnClickListener {
                 val taskName = taskNameEt.text.toString()
                 val taskDeadline = taskDeadlineTv.text.toString()
-                var taskDescription = taskDescriptionEt.text.toString()
+                val taskDescription = taskDescriptionEt.text.toString()
                 if (taskName.isNotEmpty() && taskDeadline.isNotEmpty()) {
-                    alertDialog.dismiss()
+                    HWApplication.instance.hwApi.updateEvent(
+                        userToken!!, event.eventId, CreateEventReq(
+                            taskName, taskDescription, taskDeadline
+                        )
+                    ).subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({
+                            updateUI()
+                            alertDialog.dismiss()
+                        }, {
+                            ErrorUtils.showMessage(it, activity)
+                        })
                 }
             }
         }

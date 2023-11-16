@@ -59,12 +59,14 @@
     <string name="group_name">Group Name</string>
     <string name="event_name">Event Name</string>
     <string name="create_event">Create Event</string>
-    <string name="enter_event_time">Enter event time</string>
+    <string name="enter_event_time">Enter event time (minutes)</string>
     <string name="task">Task:</string>
     <string name="deadline">Deadline</string>
+    <string name="estimated">Estimated</string>
     <string name="edit_task">Edit Task</string>
     <string name="create_task">Create Task</string>
     <string name="edit_create_task">Edit/Create Task</string>
     <string name="task_description">Task description</string>
     <string name="cancel">Cancel</string>
+    <string name="create_channel">Create Channel</string>
 </resources>

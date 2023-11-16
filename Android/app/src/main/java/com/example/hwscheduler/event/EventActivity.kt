@@ -3,7 +3,6 @@ package com.example.hwscheduler.event
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.EditText
@@ -11,9 +10,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.hwscheduler.ErrorUtils
 import com.example.hwscheduler.R
+import com.example.hwscheduler.api.SubscribeChannelReq
 import com.example.hwscheduler.app.HWApplication
 import com.example.hwscheduler.group.GroupActivity
+import com.example.hwscheduler.updateUserInfo
 import com.example.hwscheduler.userInfo
 import com.example.hwscheduler.userToken
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -33,17 +35,7 @@ class EventActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_event)
 
-        HWApplication.instance.hwApi.userInfo(userToken!!)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                userInfo = it
-                updateUI()
-            }, {
-                Log.e("error: ", "$it")
-            })
-
-        eventAdapter = EventAdapter(this)
+        eventAdapter = EventAdapter(this) { updateUserInfo(this) { updateUI() } }
         eventRV = findViewById(R.id.event_rv)
         bottomNavView = findViewById(R.id.event_bottom_nav)
         bottomNavView.setOnNavigationItemSelectedListener {
@@ -61,7 +53,9 @@ class EventActivity : AppCompatActivity() {
 
         subscribeBtn = findViewById(R.id.subscribe_btn)
         subscribeBtn.setOnClickListener { subscribePopup() }
+
         updateUI()
+        updateUserInfo(this) { updateUI() }
     }
 
     private fun updateUI() {
@@ -73,10 +67,11 @@ class EventActivity : AppCompatActivity() {
         eventRV.adapter = eventAdapter
     }
 
+    @SuppressLint("CheckResult")
     private fun subscribePopup() {
         val inflater = LayoutInflater.from(this@EventActivity)
         val view = inflater.inflate(R.layout.popup_subscribe, null)
-        val channelName: EditText = view.findViewById(R.id.channel_name)
+        val channelNameEt: EditText = view.findViewById(R.id.channel_name)
 
         val alertDialog = AlertDialog.Builder(this@EventActivity).apply {
             setView(view)
@@ -88,8 +83,20 @@ class EventActivity : AppCompatActivity() {
         alertDialog.setOnShowListener {
             val button = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)
             button.setOnClickListener {
-                val channelName = channelName.text.toString()
-                if (channelName.isNotEmpty()) alertDialog.dismiss()
+                val channelName = channelNameEt.text.toString()
+                if (channelName.isNotEmpty()) {
+                    HWApplication.instance.hwApi.subscribe(
+                        userToken!!,
+                        SubscribeChannelReq(channelName)
+                    ).subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({
+                            alertDialog.dismiss()
+                            updateUserInfo(this) { updateUI() }
+                        }, {
+                            ErrorUtils.showMessage(it, this)
+                        })
+                }
             }
         }
         alertDialog.show()
@@ -97,6 +104,7 @@ class EventActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        bottomNavView.selectedItemId = R.id.event_tab
+        updateUI()
+        updateUserInfo(this) { updateUI() }
     }
 }

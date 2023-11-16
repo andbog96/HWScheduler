@@ -20,6 +20,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
+        android:layout_marginStart="128dp"
+        android:layout_marginTop="32dp"
         android:hint="@string/task_name"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -33,6 +35,16 @@
         android:layout_margin="16dp"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/popup_info_task_name" />
+
+    <TextView
+        android:id="@+id/popup_info_task_estimated"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:hint="@string/estimated"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/popup_info_task_name" />
 
     <TextView

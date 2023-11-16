@@ -1,7 +1,8 @@
 package com.example.hwscheduler.group
 
+import android.annotation.SuppressLint
 import android.content.Intent
-import android.opengl.Visibility
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,11 +11,17 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.example.hwscheduler.ErrorUtils
 import com.example.hwscheduler.R
+import com.example.hwscheduler.app.HWApplication
+import com.example.hwscheduler.userToken
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 class GroupAdapter(
-    private val activity: AppCompatActivity
-): RecyclerView.Adapter<GroupViewHolder>() {
+    private val activity: AppCompatActivity,
+    private val updateUI: () -> Unit
+) : RecyclerView.Adapter<GroupViewHolder>() {
 
     private var data: List<Group> = listOf()
 
@@ -23,6 +30,7 @@ class GroupAdapter(
         notifyDataSetChanged()
     }
 
+    @SuppressLint("CheckResult")
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GroupViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return GroupViewHolder(inflater.inflate(R.layout.item_group, parent, false)).apply {
@@ -32,6 +40,20 @@ class GroupAdapter(
                     val intent = Intent(activity, GroupEventsActivity::class.java)
                     intent.putExtra(GroupEventsActivity.GROUP_ID, group.channelId)
                     activity.startActivity(intent)
+                }
+            }
+            itemView.findViewById<ImageView>(R.id.unsubscribe_img).setOnClickListener {
+                val group = data[this.adapterPosition]
+                if (!group.isAdmin) {
+                    HWApplication.instance.hwApi.unsubscribe(userToken!!, group.channelId)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({
+                            updateUI()
+                            Log.i("Unsubscribed: ", group.channelId.toString())
+                        }, {
+                            ErrorUtils.showMessage(it, activity)
+                        })
                 }
             }
         }
@@ -54,6 +76,7 @@ class GroupViewHolder(root: View) : RecyclerView.ViewHolder(root) {
         var text = group.name
         if (group.isAdmin) text += " (Admin)"
         groupName.text = text
+        if (group.isAdmin) unsubscribeImg.visibility = View.INVISIBLE
     }
 
 }
