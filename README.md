@@ -23,3 +23,7 @@ python main.py
 cd /src/frontend
 npm run build
 ```
+
+3. ios
+   скачать xcode
+   собрать проект
