@@ -2,8 +2,10 @@
   <div class="value">
     <my-label>{{channel}}</my-label>
     <my-label>{{event.name}}</my-label>
-    <label class="deadline">{{new Date(event.deadline).toUTCString()}}</label>
-    <div class="button"><slot></slot></div>
+    <my-label class="deadline">{{new Date(event.deadline).toUTCString()}}</my-label>
+    <div class="holder">
+      <slot></slot>
+    </div>
   </div>
 </template>
 
@@ -34,6 +36,7 @@ export default defineComponent({
   align-items: center;
   justify-content: center;
   height: 170px;
+  min-width: 300px;
   margin: 0 0;
 }
 
@@ -43,6 +46,11 @@ export default defineComponent({
   min-width: 100px;
   font-size: 18px;
   color: #5d0f02;
+}
+
+.holder {
+  display: flex;
+  align-items: center;
 }
 /*.button {*/
 /*  margin: 0 auto;*/

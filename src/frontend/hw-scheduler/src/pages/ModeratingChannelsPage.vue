@@ -1,17 +1,17 @@
 <template>
-  <common-form>
+  <common-form id="forma">
     <my-label>Управление {{channel.name}}: </my-label>
+    <list-item>
+      <label-input placeholder="Название" label="Задание: " v-model="in_name"></label-input>
+      <my-area placeholder="Описание задания" v-model="in_description">Описание:</my-area>
+      <label-input type="datetime-local" v-model="time" label="Дедлайн: "/>
+      <my-button :classes="'add'" @click="create_event">Создать</my-button>
+    </list-item>
+    <separate-line id="separate"/>
     <common-list :not-empty="true">
       <list-item v-for="(cur, index) in events" :key="index">
         <event-item :event="cur" :channel="channel.name"/>
         <my-button :classes="'remove'" @click="() => remove(cur)">Удалить</my-button>
-      </list-item>
-      <separate-line id="separate"/>
-      <list-item>
-        <label-input placeholder="Название" label="Задание: " v-model="in_name"></label-input>
-        <my-area placeholder="Описание задания" v-model="in_description">Описание:</my-area>
-        <label-input type="datetime-local" v-model="time" label="Дедлайн: "/>
-        <my-button :classes="'add'" @click="create_event">Создать</my-button>
       </list-item>
     </common-list>
   </common-form>
@@ -89,10 +89,14 @@
 </script>
 
 <style scoped>
+  #forma {
+    width: 50%;
+  }
+
   #separate {
     margin-top: 25px;
     padding-bottom: 20px;
-    width: auto;
+    width: 80%;
   }
 
   #submit_form > * {

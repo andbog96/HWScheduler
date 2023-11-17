@@ -72,27 +72,21 @@ export default defineComponent({
 
 <style scoped>
 
-.item {
-  flex: 0 0 48%; /* Set the flex basis to one-third of the container width */
-  box-sizing: border-box;
-  margin: 1%; /* Add padding or adjust as needed */
-}
-
-.userDataContainer button {
-  margin-top: 20px;
-}
-list-item{
-  display: flex;
-  justify-content: space-between;
-  margin: 3% 0;
-}
 .deadlineList{
-  width: 80%;
-  margin: 3% 10%;
+  width: 50%;
+  /* margin: 3% 10%; */
 }
 
-.item-container {
-  display: flex;
-  flex-wrap: wrap;
-}
+  /* .item-container {
+    display: flex;
+    flex-wrap: wrap;
+  } */
+
+  .item {
+    /* flex: 0 0 50%;
+    box-sizing: border-box; */
+    max-width: 450px;
+    min-width: 450px;
+    margin: 1%;
+  }
 </style>

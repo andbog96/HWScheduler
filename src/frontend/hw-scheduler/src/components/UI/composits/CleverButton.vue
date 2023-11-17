@@ -4,16 +4,16 @@
       <my-button>{{text}}</my-button>
     </div>
     <div v-else class="toAdd">
-      <my-input placeholder="Час: " v-model="hours" />
-      <my-input placeholder="Мин:" v-model="minutes"/>
-      <my-button @click="() => {
+      <my-input placeholder="Час: " v-model="hours" class="input"/>
+      <my-input placeholder="Мин:" v-model="minutes" class="input"/>
+      <my-label @click="() => {
         const h = parseInt(this.hours)
         const m = parseInt(this.minutes)
         hours = minutes = ''
         to_change = false;
         this.$emit('submit', event, h, m);
-      }">DONE</my-button>
-      <my-button @click="() => {to_change = false; hours=minutes='';}">Отмена</my-button>
+      }" class="button">SEND</my-label>
+      <my-label @click="() => {to_change = false; hours=minutes='';}" class="button">Back</my-label>
     </div>
   </div>
 </template>
@@ -49,8 +49,31 @@ export default {
 <style scoped>
   .toAdd {
     display: flex;
+    flex-direction: row;
+    justify-content: left;
   }
-  .toAdd:first-child {
-    padding: 5px;
+  .button {
+    background-color: #445b54;
+    color: #d8d8d8;
+    width: 100px;
+    height: 45px;
+    line-height: 40px;
+
+    border: none;
+    border-radius: 4px;
+
+    font-weight: bold;
+    cursor: pointer;
+  }
+  .button:hover {
+    background-color: #471002;;
+  }
+  .button:active {
+    background-color: #0069d9;
+    transform: translateY(1px);
+  }
+
+  .toAdd * {
+    margin: 5px;
   }
 </style>
