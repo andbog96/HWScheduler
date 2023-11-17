@@ -1,16 +1,11 @@
 <template>
   <div class="deadlineList">
     <common-form>
-      <div v-if="to_submit">
-        <event-item :event="event"/>
-        <label-input v-model="time" placeholder="Затраченное время: " label="Время:"/>
-        <my-button :classes="'add'" @click="send">Отправить</my-button>
-        <my-button :classes="'remove'" @click="revert">Отмена</my-button>
-      </div>
-      <common-list v-if="this.$data.info" :not-empty="this.$data.info.events.length > 0">
-        <list-item v-for="(cur, index) in this.$data.info.events" :key="index">
-          <event-item :event=cur :channel="searchChannel(cur.channel_id)"/>
-          <my-button @click="() => complete(cur)">Submit</my-button>
+      <common-list v-if="this.$data.info" :not-empty="this.$data.info.events.length > 0" class="item-container">
+        <list-item v-for="(cur, index) in this.$data.info.events" :key="index" class="item">
+          <event-item :event=cur :channel="searchChannel(cur.channel_id)">
+            <clever-button text="TODO" :event="cur" @submit="(event, h, m) => complete(event, h, m)"/>
+          </event-item>
         </list-item>
       </common-list>
     </common-form>
@@ -34,8 +29,6 @@
     name: 'DeadlinePage',
     mixins: [updateDataMixin],
     components: {
-      LabelInput,
-      MyButton,
       EventItem,
       CommonList,
       ListItem
@@ -111,9 +104,21 @@
 list-item{
   display: flex;
   justify-content: space-between;
+  margin: 3% 0;
 }
 .deadlineList{
   width: 80%;
   margin: 3% 10%;
+}
+
+.item {
+  flex: 0 0 48%; /* Set the flex basis to one-third of the container width */
+  box-sizing: border-box;
+  margin: 1%; /* Add padding or adjust as needed */
+}
+
+.item-container {
+  display: flex;
+  flex-wrap: wrap;
 }
 </style>

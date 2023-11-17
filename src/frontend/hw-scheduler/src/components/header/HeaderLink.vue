@@ -34,6 +34,6 @@ a {
 }
 
 a:hover {
-  color: #471002;
+  color: #5d0f02;
 }
 </style>

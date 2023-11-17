@@ -42,7 +42,7 @@
     /*color: #fbf2d5;*/
     color: #d8d8d8;
     width: 100px;
-    height: 40px;
+    height: 45px;
     line-height: 40px;
 
     border: none;
