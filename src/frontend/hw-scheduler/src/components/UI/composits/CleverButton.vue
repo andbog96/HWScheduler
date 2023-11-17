@@ -3,8 +3,8 @@
     <div v-if="!to_change" @click="() => to_change=true">
       <my-button>{{text}}</my-button>
     </div>
-    <div v-else>
-      <my-input placeholder="Час: " v-model="hours"/>
+    <div v-else class="toAdd">
+      <my-input placeholder="Час: " v-model="hours" />
       <my-input placeholder="Мин:" v-model="minutes"/>
       <my-button @click="() => {
         const h = parseInt(this.hours)
@@ -47,5 +47,10 @@ export default {
 </script>
 
 <style scoped>
-
+  .toAdd {
+    display: flex;
+  }
+  .toAdd:first-child {
+    padding: 5px;
+  }
 </style>

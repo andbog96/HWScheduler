@@ -2,11 +2,11 @@
   <div class="profile">
     <common-form>
       <common-list :not-empty="true">
-        <list-item>
+        <list-item class="toAdd">
           <my-input placeholder="Новый канал: " v-model="this.create_name"></my-input>
           <my-button :classes="'add'" @click="create_channel">Создать</my-button>
         </list-item>
-        <list-item>
+        <list-item class="toAdd">
           <my-input placeholder="Имя канала: " v-model="this.subscribe_name"></my-input>
           <my-button :classes="'add'" @click="subscribe_channel">Вступить</my-button>
         </list-item>
@@ -84,6 +84,9 @@ export default defineComponent({
 </script>
 
 <style scoped>
+  .toAdd {
+    display: flex;
+  }
   .buttons button {
     margin: 20px 10px;
   }

@@ -2,7 +2,7 @@
   <div class="value">
     <my-label>{{channel}}</my-label>
     <my-label>{{event.name}}</my-label>
-    <label class="deadline">{{new Date(event.deadline)}}</label>
+    <label class="deadline">{{new Date(event.deadline).toUTCString()}}</label>
     <div class="button"><slot></slot></div>
   </div>
 </template>

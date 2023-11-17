@@ -1,6 +1,6 @@
 <template>
   <common-form>
-    <my-label>Manage {{channel.name}} events: </my-label>
+    <my-label>Управление {{channel.name}}: </my-label>
     <common-list :not-empty="true">
       <list-item v-for="(cur, index) in events" :key="index">
         <event-item :event="cur" :channel="channel.name"/>
