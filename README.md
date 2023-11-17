@@ -24,6 +24,4 @@ cd /src/frontend
 npm run build
 ```
 
-3. ios
-   скачать xcode
-   собрать проект
+3. ios: скачать xcode, собрать проект
