@@ -26,6 +26,7 @@ struct MainView: View {
                     .background(Color(.systemGray6))
                     .cornerRadius(5.0)
                     .padding(.bottom, 20)
+                    .textInputAutocapitalization(.never)
                 SecureField("Пароль", text: $password)
                     .padding()
                     .background(Color(.systemGray6))
@@ -123,6 +124,10 @@ struct MainView: View {
                     .keyboardType(.numberPad)
                 Button("Отмена", role: .cancel, action: {})
                 Button("Отправить") {
+                    Task {
+                        try? await API.postUserEvent(eventId: String(completeEvent!.event_id), worktime: completeTime, token: token)
+                        events = (try? await API.getUserInfo(token: token).events) ?? []
+                    }
                     events.removeAll(where: { $0.event_id == completeEvent?.event_id })
                 }
             }
@@ -139,15 +144,18 @@ struct MainView: View {
                     .keyboardType(.numberPad)
                 Button("Отмена", role: .cancel, action: {})
                 Button("Подписаться") {
-
+                    Task {
+                        try? await API.postUserChannel(shortName: subscribeChName, token: token)
+                        channels = (try? await API.getUserInfo(token: token))?.channels ?? []
+                    }
                 }
             }
         )
         .task {
-            events = (try? await API.getUserInfo(token: "qwe").events) ?? []
+            events = (try? await API.getUserInfo(token: token).events) ?? []
         }
         .refreshable {
-            events = (try? await API.getUserInfo(token: "qwe").events) ?? []
+            events = (try? await API.getUserInfo(token: token).events) ?? []
         }
     }
 
@@ -162,6 +170,20 @@ struct MainView: View {
                     VStack(alignment: .leading) {
                         Text(channel.name)
                             .font(.headline)
+                    }
+                    .swipeActions(edge: .leading, allowsFullSwipe: false) {
+                        Button(
+                            action: {
+                                Task {
+                                   try await API.deleteUserChannel(ch_id: String(channel.channel_id), token: token)
+                                    channels = (try? await API.getUserInfo(token: token))?.channels ?? []
+                                }
+                            },
+                            label: {
+                                Image(systemName: "trash")
+                            }
+                        )
+                        .tint(.red)
                     }
                 }
             }
@@ -198,15 +220,18 @@ struct MainView: View {
                     .keyboardType(.numberPad)
                 Button("Отмена", role: .cancel, action: {})
                 Button("Создать") {
-
+                    Task {
+                        try? await API.postChannel(name: makeChName, token: token)
+                        channels = (try? await API.getUserInfo(token: token))?.channels ?? []
+                    }
                 }
             }
         )
         .task {
-            channels = (try? await API.getUserInfo(token: "qwe"))?.channels ?? []
+            channels = (try? await API.getUserInfo(token: token))?.channels ?? []
         }
         .refreshable {
-            channels = (try? await API.getUserInfo(token: "qwe"))?.channels ?? []
+            channels = (try? await API.getUserInfo(token: token))?.channels ?? []
         }
     }
 
@@ -227,6 +252,7 @@ struct MainView: View {
     @State var removeAlert = false
     @State var removeEvent = nil as Event?
     @State var mkEvAlert = false
+    @State var mkEvCh = ""
     @State var mkEvName = ""
     @State var mkEvDeadline = ""
     @State var mkEvDescr = ""
@@ -275,6 +301,11 @@ struct MainView: View {
             Text("Создать дз"),
             isPresented: $mkEvAlert,
             actions: {
+                TextField("Канал", text: $mkEvCh)
+                    .padding()
+                    .background(Color(.systemGray6))
+                    .cornerRadius(5.0)
+                    .padding(.bottom, 20)
                 TextField("Название дз", text: $mkEvName)
                     .padding()
                     .background(Color(.systemGray6))
@@ -292,15 +323,18 @@ struct MainView: View {
                     .padding(.bottom, 20)
                 Button("Отмена", role: .cancel, action: {})
                 Button("Отправить") {
-
+                    Task {
+                        try? await API.postChannelEvent(ch_id: mkEvCh, name: mkEvName, descr: mkEvDescr, deadline: mkEvDeadline, token: token)
+                        events = (try? await API.getUserInfo(token: token).events) ?? []
+                    }
                 }
             }
         )
         .task {
-            events = (try? await API.getUserInfo(token: "qwe").events) ?? []
+            events = (try? await API.getUserInfo(token: token).events) ?? []
         }
         .refreshable {
-            events = (try? await API.getUserInfo(token: "qwe").events) ?? []
+            events = (try? await API.getUserInfo(token: token).events) ?? []
         }
     }
 }
