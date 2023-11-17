@@ -13,89 +13,69 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent } from 'vue';
-  import store from "@/store";
-  import {UserInfo, UserService, ChannelData, EventData} from "@/services/UserService";
-  import MyButton from "@/components/UI/primitives/MyButton.vue";
-  import EventItem from "@/components/UI/list/results/eventItem.vue";
-  import CommonList from "@/components/UI/list/CommonList.vue";
-  import ListItem from "@/components/UI/list/ListItem.vue";
-  import router from "@/router/router";
-  import UserProfile from "@/components/UI/composits/UserProfile.vue";
-  import updateDataMixin from "@/components/mixins/updateDataMixin";
-  import LabelInput from "@/components/UI/composits/LabelInput.vue";
+import { defineComponent } from 'vue';
+import store from "@/store";
+import {UserInfo, UserService, ChannelData, EventData} from "@/services/UserService";
+import EventItem from "@/components/UI/list/results/eventItem.vue";
+import CommonList from "@/components/UI/list/CommonList.vue";
+import ListItem from "@/components/UI/list/ListItem.vue";
+import router from "@/router/router";
+import updateDataMixin from "@/components/mixins/updateDataMixin";
+import CleverButton from "@/components/UI/composits/CleverButton.vue";
 
-  export default defineComponent({
-    name: 'DeadlinePage',
-    mixins: [updateDataMixin],
-    components: {
-      EventItem,
-      CommonList,
-      ListItem
-    },
-    computed: {
-      us: () => new UserService(),
-      userData: () => store.state.auth
-    },
-    data() : {info : UserInfo | null, to_submit: boolean, event : EventData | null, time: string} {
-      return {
-        info: null,
-        to_submit: false,
-        event: null,
-        time: "",
-      }
-    },
-    async created() {
-      if (!store.state.auth.isAuth)
-        await router.push("/");
-
-      const res = await this.us.userInfo() as UserInfo
-      this.$data.info = res
-      await this.saveData({data: res})
-    },
-    methods: {
-      async complete(event: EventData) {
-        this.$data.to_submit = true
-        this.$data.event = event
-      },
-      async send() {
-        const res = parseInt(this.$data.time)
-        if (this.$data.event && !isNaN(res)) {
-          await this.us.event_completed(this.$data.event, res)
-          await this.remove_event(this.$data.event);
-          this.$data.info = store.state.auth.data;
-        }
-        this.revert()
-      },
-      revert() {
-        this.$data.to_submit = false;
-        this.$data.time = ""
-      },
-      searchChannel(id: number): string {
-        let response = "";
-        if (this.$data.info) {
-          const found = this.$data.info.channels.find((channel: ChannelData) => channel.channel_id == id);
-          if (found)
-            response = found.name;
-        }
-        return response
-      }
+export default defineComponent({
+  name: 'DeadlinePage',
+  mixins: [updateDataMixin],
+  components: {
+    CleverButton,
+    EventItem,
+    CommonList,
+    ListItem
+  },
+  computed: {
+    us: () => new UserService(),
+    userData: () => store.state.auth
+  },
+  data() : {info : UserInfo | null} {
+    return {
+      info: null
     }
+  },
+  async created() {
+    if (!store.state.auth.isAuth)
+      await router.push("/");
+
+    const res = await this.us.userInfo() as UserInfo
+    this.$data.info = res
+    await this.saveData({data: res})
+  },
+  methods: {
+    async complete(event: EventData, hours: number, mints: number) {
+      if (!isNaN(hours) && !isNaN(mints)) {
+        await this.us.event_completed(event, hours * 60 + mints)
+        await this.remove_event(event);
+        this.$data.info = store.state.auth.data;
+      }
+    },
+    searchChannel(id: number): string {
+      let response = "";
+      if (this.$data.info) {
+        const found = this.$data.info.channels.find((channel: ChannelData) => channel.channel_id == id);
+        if (found)
+          response = found.name;
+      }
+      return response
+    }
+  }
 });
 </script>
 
 <style scoped>
-.profile {
-  display: flex;
-  width: 500px;
-  height: auto;
-  margin: auto 0;
-}
 
-.userDataContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.item {
+  flex: 0 0 48%; /* Set the flex basis to one-third of the container width */
+  box-sizing: border-box;
+  margin: 1%; /* Add padding or adjust as needed */
 }
 
 .userDataContainer button {
@@ -109,12 +89,6 @@ list-item{
 .deadlineList{
   width: 80%;
   margin: 3% 10%;
-}
-
-.item {
-  flex: 0 0 48%; /* Set the flex basis to one-third of the container width */
-  box-sizing: border-box;
-  margin: 1%; /* Add padding or adjust as needed */
 }
 
 .item-container {

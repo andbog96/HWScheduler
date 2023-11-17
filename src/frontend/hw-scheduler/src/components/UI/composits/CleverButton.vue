@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!to_change" @click="() => to_change=true" class="button">
+    <div v-if="!to_change" @click="() => to_change=true">
       <my-button>{{text}}</my-button>
     </div>
     <div v-else>
