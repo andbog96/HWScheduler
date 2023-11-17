@@ -39,9 +39,8 @@
 <style scoped>
   .my-button {
     background-color: #445b54;
-    /*color: #fbf2d5;*/
     color: #d8d8d8;
-    width: 100px;
+    width: 160px;
     height: 45px;
     line-height: 40px;
 
@@ -77,13 +76,6 @@
     width: 30px;
     height: 30px;
   }
-  /*.remove:hover {*/
-  /*  background-color: #b63838;*/
-  /*}*/
-  /*.remove:active {*/
-  /*  background-color: #b63838;*/
-  /*  transform: translateY(1px);*/
-  /*}*/
 
   .add {
     color: #fff;

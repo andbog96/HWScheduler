@@ -1,13 +1,11 @@
 <template>
   <div class = "sign_in_page">
     <common-form>
-      <div>
-        <error-message v-show="hasError">{{errorMsg}}</error-message>
-        <label-input id="li" type="text" label="Login" placeholder="Enter Login" v-model="form.login"/>
-        <label-input id="pi" type="password" label="Password" placeholder="Enter Password" v-model="form.password" />
-        <div class="buttons">
-          <my-button @click="login">Login</my-button>
-        </div>
+      <error-message v-show="hasError">{{errorMsg}}</error-message>
+      <label-input id="li" type="text" label="Login" placeholder="Enter Login" v-model="form.login"/>
+      <label-input id="pi" type="password" label="Password" placeholder="Enter Password" v-model="form.password" />
+      <div class="buttons">
+        <my-button @click="login">Login</my-button>
       </div>
     </common-form>
   </div>

@@ -1,21 +1,17 @@
 <template>
-  <common-form class="form">
-    <my-label>Управление: {{channel.name}}</my-label>
-
-    <list-item id="create">
-      <div id="add-box">
+  <common-form>
+    <my-label>Manage {{channel.name}} events: </my-label>
+    <common-list :not-empty="true">
+      <list-item v-for="(cur, index) in events" :key="index">
+        <event-item :event="cur" :channel="channel.name"/>
+        <my-button :classes="'remove'" @click="() => remove(cur)">Удалить</my-button>
+      </list-item>
+      <separate-line id="separate"/>
+      <list-item>
         <label-input placeholder="Название" label="Задание: " v-model="in_name"></label-input>
+        <my-area placeholder="Описание задания" v-model="in_description">Описание:</my-area>
+        <label-input type="datetime-local" v-model="time" label="Дедлайн: "/>
         <my-button :classes="'add'" @click="create_event">Создать</my-button>
-      </div>
-      <my-area placeholder="Описание задания" v-model="in_description">Описание:</my-area>
-      <label-input type="datetime-local" v-model="time" label="Дедлайн: "/>
-    </list-item>
-
-    <common-list :not-empty="true" class="item-container">
-      <list-item v-for="(cur, index) in events" :key="index" class="item">
-        <event-item :event="cur" :channel="channel.name">
-          <my-button :classes="'remove'" @click="() => remove(cur)">Удалить</my-button>
-        </event-item>
       </list-item>
     </common-list>
   </common-form>
@@ -33,13 +29,14 @@
   import MyArea from "@/components/UI/composits/MyArea.vue";
   import MyButton from "@/components/UI/primitives/MyButton.vue";
   import LabelInput from "@/components/UI/composits/LabelInput.vue";
+  import SeparateLine from "@/components/UI/primitives/SeparateLine.vue";
   import updateDataMixin from "@/components/mixins/updateDataMixin";
 
   export default defineComponent({
     name: "SignUpPage",
     mixins: [updateDataMixin],
     components: {
-      LabelInput, MyButton, MyArea, MyLabel, EventItem, CommonList, ListItem},
+      SeparateLine, LabelInput, MyButton, MyArea, MyLabel, EventItem, CommonList, ListItem},
     async created() {
       if (!store.state.auth.isAuth)
         await router.push("/");
@@ -60,8 +57,6 @@
         return this.$data.info.channels.find(ch => ch.channel_id === this.$data.channel_id)
       },
       events: function() {
-        console.log(this.$data.info.events)
-        console.log(this.$data.info.events.filter(ev => ev.channel_id === this.$data.channel_id))
         return this.$data.info.events.filter(ev => ev.channel_id === this.$data.channel_id)
       }
     },
@@ -78,9 +73,9 @@
           deadline: this.time.replace('T', ' ') + ':00',
           description: this.in_description,
           name: this.in_name},
+
             this.channel_id
         )
-        console.log(res);
         if (!res) {
           await this.update_data()
           this.info = store.state.auth.data
@@ -94,31 +89,6 @@
 </script>
 
 <style scoped>
-.form {
-  display: flex;
-  flex-direction: column;
-}
-
-#create {
-  width: 80%;
-  max-width: 800px;
-}
-
-#add-box {
-  display: flex;
-}
-
-.item-container {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.item {
-  flex: 0 0 48%; /* Set the flex basis to one-third of the container width */
-  box-sizing: border-box;
-  margin: 1%; /* Add padding or adjust as needed */
-}
-
   #separate {
     margin-top: 25px;
     padding-bottom: 20px;
