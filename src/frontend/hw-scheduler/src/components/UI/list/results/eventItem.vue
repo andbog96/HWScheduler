@@ -2,7 +2,8 @@
   <div class="value">
     <my-label>{{channel}}</my-label>
     <my-label>{{event.name}}</my-label>
-    <my-label>{{new Date(event.deadline)}}</my-label>
+    <label class="deadline">{{new Date(event.deadline)}}</label>
+    <div class="button"><slot></slot></div>
   </div>
 </template>
 
@@ -29,8 +30,21 @@ export default defineComponent({
 <style scoped>
 .value {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 170px;
+  margin: 0 0;
 }
+
+.deadline {
+  height: 40px;
+  line-height: 40px;
+  min-width: 100px;
+  font-size: 18px;
+  color: #5d0f02;
+}
+/*.button {*/
+/*  margin: 0 auto;*/
+/*}*/
 </style>
