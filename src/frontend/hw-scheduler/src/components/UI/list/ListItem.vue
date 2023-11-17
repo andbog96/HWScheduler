@@ -24,8 +24,6 @@
   .element {
     border: 3px solid #ccc;
     padding: 10px;
-    display: flex;
-    justify-content: space-between;
     margin: 3% 0;
     border-radius: 8px;
   }

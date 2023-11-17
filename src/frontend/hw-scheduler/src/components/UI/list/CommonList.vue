@@ -1,16 +1,12 @@
 <template>
-  <div class="list">
-    <div class="body" v-if="notEmpty">
-      <slot/>
-    </div>
-    <div class="body" v-else>
-      <framed-list-item>
-        <my-label class="empty_msg">
-          No results
-        </my-label>
-      </framed-list-item>
-    </div>
+  <div class="body" v-if="notEmpty">
+    <slot/>
   </div>
+  <framed-list-item v-else>
+    <my-label class="empty_msg">
+      No results
+    </my-label>
+  </framed-list-item>
 </template>
 
 <script lang="ts">
